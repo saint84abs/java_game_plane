@@ -18,20 +18,35 @@ public class game extends JFrame implements ActionListener {
 	
 	private int x = 0, y = 0;
 	
-	private ImageIcon background = new ImageIcon
-			(Main.class.getResource("../planegame/planegame.image/myPlane.png"));
-	private JLabel imgLabel = new JLabel();
+	private ImageIcon background = new ImageIcon("../planegame/image/myBackGound.jpg");
+	private ImageIcon myPlane = new ImageIcon("../planegame/image/myPlane.png");
+	
+	private JLabel backgroundLabel = new JLabel();
+	private JLabel myPlaneLabel = new JLabel();
 	
 	game(String title) {
 		super(title);
 		setSize(600, 900);
 		setResizable(false);
+		setLayout(null);
 		
-		imgLabel.setIcon(background);
+		backgroundLabel.setIcon(background);
+		myPlaneLabel.setIcon(myPlane);
 		
+		JPanel plane = new JPanel();
+		plane.add(myPlaneLabel);
+
+		plane.setBounds(100, 100, myPlaneLabel.getWidth(), myPlaneLabel.getHeight());
+		backgroundLabel.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
+		
+		add("background", backgroundLabel);
+		add("myPlane", plane);
+		
+		//pack();
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 	}
+	
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
