@@ -40,32 +40,7 @@ public class game extends JFrame implements ActionListener {
 
 			}
 		};
-		plane.addKeyListener(new KeyListener() {
-			
-			@Override
-			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
-				if (e.getKeyChar() == 'w' ) {
-					y++;
-				}
-				if (e.getKeyChar() == 's') {
-					y--;
-				}
-				
-			}
-		});
+
 		plane.setBounds(x, y, myPlane.getIconWidth(), myPlane.getIconHeight());
 		backgroundLabel.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
 		
