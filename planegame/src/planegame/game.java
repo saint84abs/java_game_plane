@@ -15,8 +15,7 @@ import com.sun.tools.javac.Main;
 public class game extends JFrame implements ActionListener {
 	private JButton bt_1 = new JButton();
 	private JButton bt_2 = new JButton();
-	
-	private int x = 220, y = 220;
+	private int x = 200, y = 720;
 	
 	private ImageIcon background = new ImageIcon("../planegame/image/myBackGound.jpg");
 	private ImageIcon myPlane = new ImageIcon("../planegame/image/myPlane.png");
@@ -24,31 +23,56 @@ public class game extends JFrame implements ActionListener {
 	private JLabel backgroundLabel = new JLabel();
 	private JLabel myPlaneLabel = new JLabel();
 	
-	game(String title) {
+	private Thread thread_plane = new Thread(new MyRunnable());
+	
+	public game(String title) {
 		super(title);
-		setSize(600, 900);
+		setSize(520, 900);
 		setResizable(false);
 		setLayout(null);
+		setContentPane(backgroundLabel);
 		
 		backgroundLabel.setIcon(background);
 		myPlaneLabel.setIcon(myPlane);
-		//myPlaneLabel.setBackground(null);
+
+		
 		
 		JPanel plane = new JPanel() {
 			public void paintComponent(Graphics g) {
-				g.drawImage(myPlane.getImage(), 0, 0, myPlane.getIconWidth(), myPlane.getIconHeight(), null);
-
+				paintPlane(g);
 			}
 		};
-
-		plane.setBounds(x, y, myPlane.getIconWidth(), myPlane.getIconHeight());
-		backgroundLabel.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
 		
+		thread_plane.start();
+		plane.setBounds(x, y, myPlane.getIconWidth(), myPlane.getIconHeight());
+		plane.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		add("myPlane", plane);
-		add("background", backgroundLabel);
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
+	}
+	
+	public void paintPlane(Graphics g) {
+		g.drawImage(myPlane.getImage(), 0, 0, myPlane.getIconWidth(), myPlane.getIconHeight(), null);
 	}
 	
 	
@@ -58,23 +82,22 @@ public class game extends JFrame implements ActionListener {
 		
 	}
 	
-	public void keyPressed(KeyEvent e) {
-		if (e.getKeyChar() == 'w') {
-			y++;
-		}
-		if (e.getKeyChar() == 's') {
-			y--;
-		}
-		if (e.getKeyChar() == 'd') {
-			x++;
-		}
-		if (e.getKeyChar() == 'a') {
-			x--;
-		}
-	}
+	
 	
 	public static void main(String args[]) {
 		game g = new game("1944");
 	}
+
+	class MyRunnable implements Runnable {
+		private volatile boolean isRunning = true;
+		
+		@Override
+		public void run() {
+			System.out.println(Thread.currentThread().getName());
+		}
+	}
+	
+	
 }
+
 
