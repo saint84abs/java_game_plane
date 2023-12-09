@@ -30,12 +30,11 @@ public class game extends JFrame implements ActionListener {
 		setSize(520, 900);
 		setResizable(false);
 		setLayout(null);
-		setContentPane(backgroundLabel);
 		
 		backgroundLabel.setIcon(background);
-		myPlaneLabel.setIcon(myPlane);
-
+		setContentPane(backgroundLabel);
 		
+		myPlaneLabel.setIcon(myPlane);
 		
 		JPanel plane = new JPanel() {
 			public void paintComponent(Graphics g) {
@@ -43,7 +42,7 @@ public class game extends JFrame implements ActionListener {
 			}
 		};
 		
-		thread_plane.start();
+		//thread_plane.start();
 		plane.setBounds(x, y, myPlane.getIconWidth(), myPlane.getIconHeight());
 		plane.addKeyListener(new KeyListener() {
 			
@@ -62,7 +61,13 @@ public class game extends JFrame implements ActionListener {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// TODO Auto-generated method stub
-				
+				switch(e.getKeyCode()) {
+					case KeyEvent.VK_UP :
+						System.out.println("pressed W!");
+						y++;
+						break;
+					}
+					
 			}
 		});
 		add("myPlane", plane);
@@ -93,6 +98,10 @@ public class game extends JFrame implements ActionListener {
 		
 		@Override
 		public void run() {
+			try {
+				repaint();
+				Thread.sleep(15);				
+			} catch (Exception e) {}
 			System.out.println(Thread.currentThread().getName());
 		}
 	}
