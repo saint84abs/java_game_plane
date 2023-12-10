@@ -3,6 +3,7 @@ package planegame;
 
 
 import java.awt.*;
+import java.awt.RenderingHints.Key;
 import java.awt.event.*;
 import java.util.LinkedList;
 
@@ -12,80 +13,58 @@ import javax.swing.event.*;
 import com.sun.tools.javac.Main;
 
 
-public class game extends JFrame implements ActionListener {
+public class game extends JFrame implements KeyListener {
 	private JButton bt_1 = new JButton();
 	private JButton bt_2 = new JButton();
 	private int x = 200, y = 720;
 	
 	private ImageIcon background = new ImageIcon("../planegame/image/myBackGound.jpg");
-	private ImageIcon myPlane = new ImageIcon("../planegame/image/myPlane.png");
 	
-	private JLabel backgroundLabel = new JLabel();
+	private Image backImage = Toolkit.getDefaultToolkit().getImage("../planegame/image/myBackGound.jpg");
+	private Image planeImage = Toolkit.getDefaultToolkit().getImage("../planegame/image/myPlane.png");
+	
 	private JLabel myPlaneLabel = new JLabel();
 	
 	private Thread thread_plane = new Thread(new MyRunnable());
 	
 	public game(String title) {
 		super(title);
-		setSize(520, 900);
+		setBounds(300, 150, background.getIconWidth(), background.getIconHeight());
 		setResizable(false);
-		setLayout(null);
-		
-		backgroundLabel.setIcon(background);
-		setContentPane(backgroundLabel);
-		
-		myPlaneLabel.setIcon(myPlane);
-		
-		JPanel plane = new JPanel() {
-			public void paintComponent(Graphics g) {
-				paintPlane(g);
-			}
-		};
-		
-		//thread_plane.start();
-		plane.setBounds(x, y, myPlane.getIconWidth(), myPlane.getIconHeight());
-		plane.addKeyListener(new KeyListener() {
-			
-			@Override
-			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
-				switch(e.getKeyCode()) {
-					case KeyEvent.VK_UP :
-						System.out.println("pressed W!");
-						y++;
-						break;
-					}
-					
-			}
-		});
-		add("myPlane", plane);
-		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
+		
+		addKeyListener(null);
 	}
 	
-	public void paintPlane(Graphics g) {
-		g.drawImage(myPlane.getImage(), 0, 0, myPlane.getIconWidth(), myPlane.getIconHeight(), null);
+	@Override
+	public void paint(Graphics g) {
+		g.drawImage(backImage, 0, 0, getWidth(), getHeight(), this);
+		g.drawImage(planeImage, x, y, this);
+
 	}
-	
 	
 	
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void keyTyped(KeyEvent e) {}
+	@Override
+	// implements keyListner
+	public void keyPressed(KeyEvent e) {
+		int keyCode = e.getKeyCode();
 		
+		switch (keyCode) {
+		case KeyEvent.VK_LEFT:
+			if (x < 0)
+				x = 0;
+				x -= 5;
+				repaint();
+				break;
+			
+				
+		}
 	}
+	@Override
+	public void keyReleased(KeyEvent e) {}
 	
 	
 	
@@ -108,5 +87,4 @@ public class game extends JFrame implements ActionListener {
 	
 	
 }
-
 
