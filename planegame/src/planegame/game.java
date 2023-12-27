@@ -72,22 +72,18 @@ public class game extends JFrame {
 					y -= 1;
 				else 
 					y = 450;
-				repaint();
 			}
 			if (isDOWN == true) {
 				y += 1;
-				repaint();
 			}
 			if (isLEFT == true) {
 				if (x < 0) 
 					x = 0;
 				else 
 					x -= 1;
-				repaint();
 			}
 			if (isRIGHT == true) {
 				x += 1;
-				repaint();
 			}
 			try {
 				Thread.sleep(8);
@@ -95,6 +91,7 @@ public class game extends JFrame {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			repaint();
 		}
 	}
 
@@ -105,8 +102,8 @@ public class game extends JFrame {
 		public void run() {
 			while(isRunning) {
 				try {
-					Thread.sleep(30);
 					Move();	
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
