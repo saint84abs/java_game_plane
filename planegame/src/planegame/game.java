@@ -14,9 +14,9 @@ public class game extends JFrame {
 	private JButton bt_1 = new JButton();
 	private JButton bt_2 = new JButton();
 	
-	private ImageIcon background = new ImageIcon("../planegame/image/myBackGound.jpg");
+	private ImageIcon background = new ImageIcon("../planegame/image/myBackGround.jpg");
 	
-	private Image backImage = Toolkit.getDefaultToolkit().getImage("../planegame/image/myBackGound.jpg");
+	private Image backImage = Toolkit.getDefaultToolkit().getImage("../planegame/image/myBackGround.jpg");
 	private Image planeImage = Toolkit.getDefaultToolkit().getImage("../planegame/image/myPlane.png");
 	
 	private JLabel myPlaneLabel = new JLabel();
@@ -26,6 +26,10 @@ public class game extends JFrame {
 	private int x = 200, y = 720;
 	private boolean isUP, isDOWN, isLEFT, isRIGHT;
 	
+	//double buffering용 변수
+	private Image img;
+	private Graphics img_g;
+	
 	public game(String title) {
 		super(title);
 		setBounds(300, 150, background.getIconWidth(), background.getIconHeight());
@@ -33,16 +37,24 @@ public class game extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 		addKeyListener(new MykeyListner());
+		
+		createBufferStrategy(2);
+		
 		thread_plane.start();
 		// 스레드 시작시 keylistner에서 thread로 true, false 로 값 전달
 		// 실질적인 이동은 thread에서
 		// https://dreamchallenger.blogspot.com/2011/08/keylistener-thread.html
+
 		
 	}
 	
+	
 	@Override
 	public void paint(Graphics g) {
+		
 		g.drawImage(backImage, 0, 0, getWidth(), getHeight(), this);
+
+		
 		g.drawImage(planeImage, x, y, this);
 	}
 	
@@ -92,7 +104,12 @@ public class game extends JFrame {
 		@Override
 		public void run() {
 			while(isRunning) {
-				Move();									
+				try {
+					Thread.sleep(30);
+					Move();	
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
