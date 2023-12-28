@@ -3,6 +3,7 @@ package planegame;
 import java.awt.*;
 import java.awt.RenderingHints.Key;
 import java.awt.event.*;
+import java.awt.image.BufferStrategy;
 import java.util.LinkedList;
 
 import javax.swing.*;
@@ -39,6 +40,41 @@ public class game extends JFrame {
 		addKeyListener(new MykeyListner());
 		
 		createBufferStrategy(2);
+		BufferStrategy strategy = this.getBufferStrategy();
+		
+//		 // Main loop
+//		 while (!done) {
+//		     // Prepare for rendering the next frame
+//		     // ...
+//
+//		     // Render single frame
+//		     do {
+//		         // The following loop ensures that the contents of the drawing buffer
+//		         // are consistent in case the underlying surface was recreated
+//		         do {
+//		             // Get a new graphics context every time through the loop
+//		             // to make sure the strategy is validated
+//		             Graphics graphics = strategy.getDrawGraphics();
+//
+//		             // Render to graphics
+//		             // ...
+//
+//		             // Dispose the graphics
+//		             graphics.dispose();
+//
+//		             // Repeat the rendering if the drawing buffer contents
+//		             // were restored
+//		         } while (strategy.contentsRestored());
+//
+//		         // Display the buffer
+//		         strategy.show();
+//
+//		         // Repeat the rendering if the drawing buffer was lost
+//		     } while (strategy.contentsLost());
+//		 }
+		// http://cris.joongbu.ac.kr/course/java/api/java/awt/Graphics.html
+		
+		strategy.show();
 		
 		thread_plane.start();
 		// 스레드 시작시 keylistner에서 thread로 true, false 로 값 전달
