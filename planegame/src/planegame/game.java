@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.RenderingHints.Key;
 import java.awt.event.*;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 import javax.swing.*;
@@ -30,6 +31,7 @@ public class game extends JFrame {
 	//double buffering용 변수
 	private Image img;
 	private Graphics img_g;
+	private BufferedImage backBuffer;
 	
 	public game(String title) {
 		super(title);
@@ -80,13 +82,16 @@ public class game extends JFrame {
 		// 스레드 시작시 keylistner에서 thread로 true, false 로 값 전달
 		// 실질적인 이동은 thread에서
 		// https://dreamchallenger.blogspot.com/2011/08/keylistener-thread.html
-
+		backBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 		
 	}
 	
 	
 	@Override
 	public void paint(Graphics g) {
+		
+		
+		
 		
 		g.drawImage(backImage, 0, 0, getWidth(), getHeight(), this);
 
