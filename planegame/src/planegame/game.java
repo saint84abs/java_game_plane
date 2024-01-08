@@ -5,8 +5,9 @@ import java.awt.RenderingHints.Key;
 import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
+import java.awt.image.DataBufferDouble;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -16,10 +17,10 @@ public class game extends JFrame {
 	private JButton bt_1 = new JButton();
 	private JButton bt_2 = new JButton();
 	
-	private ImageIcon background = new ImageIcon("../planegame/image/myBackGround.jpg");
+	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
 	
-	private Image backImage = Toolkit.getDefaultToolkit().getImage("../planegame/image/myBackGround.jpg");
-	private Image planeImage = Toolkit.getDefaultToolkit().getImage("../planegame/image/myPlane.png");
+	private Image backImage = Toolkit.getDefaultToolkit().getImage("image/myBackGround.jpg");
+	private Image planeImage = Toolkit.getDefaultToolkit().getImage("image/myPlane.png");
 	
 	private JLabel myPlaneLabel = new JLabel();
 	
@@ -33,6 +34,9 @@ public class game extends JFrame {
 	private Graphics img_g;
 	private BufferedImage backBuffer;
 	
+	
+	
+	
 	public game(String title) {
 		super(title);
 		setBounds(300, 150, background.getIconWidth(), background.getIconHeight());
@@ -40,63 +44,49 @@ public class game extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 		addKeyListener(new MykeyListner());
+		Thread myth = new Thread(new MyRunnable());
+		myth.start();
 		
-		createBufferStrategy(2);
-		BufferStrategy strategy = this.getBufferStrategy();
+		BufferedImage backbuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 		
-//		 // Main loop
-//		 while (!done) {
-//		     // Prepare for rendering the next frame
-//		     // ...
-//
-//		     // Render single frame
-//		     do {
-//		         // The following loop ensures that the contents of the drawing buffer
-//		         // are consistent in case the underlying surface was recreated
-//		         do {
-//		             // Get a new graphics context every time through the loop
-//		             // to make sure the strategy is validated
-//		             Graphics graphics = strategy.getDrawGraphics();
-//
-//		             // Render to graphics
-//		             // ...
-//
-//		             // Dispose the graphics
-//		             graphics.dispose();
-//
-//		             // Repeat the rendering if the drawing buffer contents
-//		             // were restored
-//		         } while (strategy.contentsRestored());
-//
-//		         // Display the buffer
-//		         strategy.show();
-//
-//		         // Repeat the rendering if the drawing buffer was lost
-//		     } while (strategy.contentsLost());
-//		 }
-		// http://cris.joongbu.ac.kr/course/java/api/java/awt/Graphics.html
+		Graphics2D g2d = (Graphics2D) backBuffer.getGraphics();
+		// 그래픽 작업 수행
+		g2d.drawImage(planeImage, x, y, this);
 		
-		strategy.show();
-		
-		thread_plane.start();
-		// 스레드 시작시 keylistner에서 thread로 true, false 로 값 전달
-		// 실질적인 이동은 thread에서
-		// https://dreamchallenger.blogspot.com/2011/08/keylistener-thread.html
-		backBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-		
+//		try {
+//			// 이미지 파일 읽어오기
+//			BufferedImage MyPlaneImage = ImageIO.read(game.class.getResourceAsStream("image/myPlane.png"));
+//			
+//			// 그래픽 작업 수행
+//			g2d.drawImage(MyPlaneImage, 0, 0, this);
+//		} catch (Exception e) {
+//			System.out.println("there is no image!");
+//			e.printStackTrace();
+//		} finally {
+//			g2d.dispose();
+//		}
+//        // 그래픽 작업이 완료된 후에 이미지를 화면에 표시
+//        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+//        GraphicsDevice gd = ge.getDefaultScreenDevice();
+//        GraphicsConfiguration gc = gd.getDefaultConfiguration();
+//        Frame frame = new Frame(gc);
+//        frame.add(new Canvas() {
+//            @Override
+//            public void paint(Graphics g) {
+//                g.drawImage(image, x, y, null);
+//            }
+//        });
 	}
 	
 	
 	@Override
 	public void paint(Graphics g) {
-		
-		
-		
+		super.paint(g);
 		
 		g.drawImage(backImage, 0, 0, getWidth(), getHeight(), this);
-
 		
-		g.drawImage(planeImage, x, y, this);
+		//g.drawImage(planeImage, x, y, planeImage.getWidth(this), planeImage.getHeight(this), this);
+		g.drawImage(backBuffer, x, y, this);
 	}
 	
 	public static void main(String args[]) {
@@ -105,7 +95,6 @@ public class game extends JFrame {
 	}
 	
 	public void Move() {
-		//https://binghedev.tistory.com/56
 		// 비행기가 계속 깜빡거리는데, 더블 버퍼링을 통해 해결 가능?
 		while(isUP == true || isDOWN == true || isLEFT == true || isRIGHT == true) {
 			if (isUP == true) {
@@ -115,24 +104,31 @@ public class game extends JFrame {
 					y = 450;
 			}
 			if (isDOWN == true) {
-				y += 1;
+				if (y >= background.getIconHeight() - planeImage.getHeight(this))
+					y = background.getIconHeight() - planeImage.getHeight(this);
+				else 
+					y += 1;
 			}
 			if (isLEFT == true) {
-				if (x < 0) 
+				if (x <= 0) 
 					x = 0;
 				else 
-					x -= 1;
+					x -= 2;
 			}
 			if (isRIGHT == true) {
-				x += 1;
+				if (x < background.getIconWidth() - planeImage.getWidth(this))
+					x += 2;
+				else
+					x = background.getIconWidth() - planeImage.getWidth(this);
 			}
 			try {
-				Thread.sleep(8);
+				Thread.sleep(16);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} finally {
+				repaint();				
 			}
-			repaint();
 		}
 	}
 
@@ -194,3 +190,10 @@ public class game extends JFrame {
 		}
 	}
 }
+
+
+/* 참고 자료
+ * https://binghedev.tistory.com/56
+ * http://cris.joongbu.ac.kr/course/java/api/java/awt/Graphics.html
+ * 
+ */
