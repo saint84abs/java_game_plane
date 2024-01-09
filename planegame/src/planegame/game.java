@@ -6,6 +6,8 @@ import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferDouble;
+import java.io.File;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -18,9 +20,10 @@ public class game extends JFrame {
 	private JButton bt_2 = new JButton();
 	
 	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
+	private ImageIcon planeIcon = new ImageIcon("Image/myPlane");
 	
-	private Image backImage = Toolkit.getDefaultToolkit().getImage("image/myBackGround.jpg");
-	private Image planeImage = Toolkit.getDefaultToolkit().getImage("image/myPlane.png");
+	private Image backImage = new ImageIcon("image/myBackGround.jpg").getImage();
+	private Image planeImage = new ImageIcon("image/myPlane.png").getImage();
 	
 	private JLabel myPlaneLabel = new JLabel();
 	
@@ -28,6 +31,9 @@ public class game extends JFrame {
 	
 	private int x = 200, y = 720;
 	private boolean isUP, isDOWN, isLEFT, isRIGHT;
+	
+	private Thread myth = new Thread(new MyRunnable());
+	
 	
 	//double buffering용 변수
 	private Image img;
@@ -44,14 +50,8 @@ public class game extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 		addKeyListener(new MykeyListner());
-		Thread myth = new Thread(new MyRunnable());
 		myth.start();
 		
-		BufferedImage backbuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-		
-		Graphics2D g2d = (Graphics2D) backBuffer.getGraphics();
-		// 그래픽 작업 수행
-		g2d.drawImage(planeImage, x, y, this);
 		
 //		try {
 //			// 이미지 파일 읽어오기
@@ -81,12 +81,23 @@ public class game extends JFrame {
 	
 	@Override
 	public void paint(Graphics g) {
-		super.paint(g);
+		super.paintComponents(g);
 		
-		g.drawImage(backImage, 0, 0, getWidth(), getHeight(), this);
-		
-		//g.drawImage(planeImage, x, y, planeImage.getWidth(this), planeImage.getHeight(this), this);
-		g.drawImage(backBuffer, x, y, this);
+		BufferedImage bufferBackGround = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+	    Graphics bufferbackGraphics = bufferBackGround.getGraphics();
+	    
+	    bufferbackGraphics.drawImage(backImage, 0, 0, getWidth(), getHeight(), this);
+	    background.paintIcon(this, bufferbackGraphics, 0, 0);
+	    
+	    g.drawImage(bufferBackGround, 0, 0, this);
+	    
+	    BufferedImage bufferPlaneImage = new BufferedImage(planeImage.getWidth(null), planeImage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+	    Graphics bufferGraphics = bufferPlaneImage.getGraphics();
+	    
+	    bufferGraphics.drawImage(planeImage, 0, 0, planeImage.getWidth(null), planeImage.getHeight(null), this);
+	    planeIcon.paintIcon(this, bufferGraphics, 0, 0);
+	    
+	    g.drawImage(bufferPlaneImage, x, y, this);
 	}
 	
 	public static void main(String args[]) {
@@ -126,9 +137,8 @@ public class game extends JFrame {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} finally {
-				repaint();				
 			}
+			SwingUtilities.invokeLater(() -> repaint());
 		}
 	}
 
@@ -140,7 +150,6 @@ public class game extends JFrame {
 			while(isRunning) {
 				try {
 					Move();	
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
