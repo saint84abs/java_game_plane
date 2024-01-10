@@ -39,7 +39,7 @@ public class game extends JFrame {
 	private Image img;
 	private Graphics img_g;
 	private BufferedImage backBuffer;
-	
+	private JPanel gamePanel;
 	
 	
 	
@@ -52,30 +52,31 @@ public class game extends JFrame {
 		addKeyListener(new MykeyListner());
 		myth.start();
 		
-		
-//		try {
-//			// 이미지 파일 읽어오기
-//			BufferedImage MyPlaneImage = ImageIO.read(game.class.getResourceAsStream("image/myPlane.png"));
-//			
-//			// 그래픽 작업 수행
-//			g2d.drawImage(MyPlaneImage, 0, 0, this);
-//		} catch (Exception e) {
-//			System.out.println("there is no image!");
-//			e.printStackTrace();
-//		} finally {
-//			g2d.dispose();
-//		}
-//        // 그래픽 작업이 완료된 후에 이미지를 화면에 표시
-//        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-//        GraphicsDevice gd = ge.getDefaultScreenDevice();
-//        GraphicsConfiguration gc = gd.getDefaultConfiguration();
-//        Frame frame = new Frame(gc);
-//        frame.add(new Canvas() {
-//            @Override
-//            public void paint(Graphics g) {
-//                g.drawImage(image, x, y, null);
-//            }
-//        });
+		gamePanel = new JPanel() {
+			@Override 
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				
+				BufferedImage bufferBackGround = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+			    Graphics bufferbackGraphics = bufferBackGround.getGraphics();
+			    
+			    bufferbackGraphics.drawImage(backImage, 0, 0, getWidth(), getHeight(), this);
+			    background.paintIcon(this, bufferbackGraphics, 0, 0);
+			    
+			    g.drawImage(bufferBackGround, 0, 0, this);
+			    
+			    BufferedImage bufferPlaneImage = new BufferedImage(planeImage.getWidth(null), planeImage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+			    Graphics bufferGraphics = bufferPlaneImage.getGraphics();
+			    
+			    bufferGraphics.drawImage(planeImage, 0, 0, planeImage.getWidth(null), planeImage.getHeight(null), this);
+			    planeIcon.paintIcon(this, bufferGraphics, 0, 0);
+			    
+			    g.drawImage(bufferPlaneImage, x, y, this);
+			}
+		};
+		gamePanel.setLayout(null);
+		gamePanel.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
+		add(gamePanel);
 	}
 	
 	
