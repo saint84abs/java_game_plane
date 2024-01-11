@@ -15,189 +15,25 @@ import javax.swing.event.*;
 
 import com.sun.tools.javac.Main;
 
-public class game extends JFrame {
-	private JButton bt_1 = new JButton();
-	private JButton bt_2 = new JButton();
-	
+public class game extends JFrame {	
 	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
-	private ImageIcon planeIcon = new ImageIcon("Image/myPlane");
-	
-	private Image backImage = new ImageIcon("image/myBackGround.jpg").getImage();
-	private Image planeImage = new ImageIcon("image/myPlane.png").getImage();
-	
-	private JLabel myPlaneLabel = new JLabel();
-	
-	private Thread thread_plane = new Thread(new MyRunnable());
-	
-	private int x = 200, y = 720;
-	private boolean isUP, isDOWN, isLEFT, isRIGHT;
-	
-	private Thread myth = new Thread(new MyRunnable());
-	
-	
-	//double buffering용 변수
-	private Image img;
-	private Graphics img_g;
-	private BufferedImage backBuffer;
-	private JPanel gamePanel;
-	
-	
-	
+
+
 	public game(String title) {
 		super(title);
-		setBounds(300, 150, background.getIconWidth(), background.getIconHeight());
+		//setBounds(300, 100, background.getIconWidth(), background.getIconHeight());
 		setResizable(false);
+		setIgnoreRepaint(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
-		addKeyListener(new MykeyListner());
-		myth.start();
 		
-		gamePanel = new JPanel() {
-			@Override 
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				
-				BufferedImage bufferBackGround = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-			    Graphics bufferbackGraphics = bufferBackGround.getGraphics();
-			    
-			    bufferbackGraphics.drawImage(backImage, 0, 0, getWidth(), getHeight(), this);
-			    background.paintIcon(this, bufferbackGraphics, 0, 0);
-			    
-			    g.drawImage(bufferBackGround, 0, 0, this);
-			    
-			    BufferedImage bufferPlaneImage = new BufferedImage(planeImage.getWidth(null), planeImage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-			    Graphics bufferGraphics = bufferPlaneImage.getGraphics();
-			    
-			    bufferGraphics.drawImage(planeImage, 0, 0, planeImage.getWidth(null), planeImage.getHeight(null), this);
-			    planeIcon.paintIcon(this, bufferGraphics, 0, 0);
-			    
-			    g.drawImage(bufferPlaneImage, x, y, this);
-			}
-		};
-		gamePanel.setLayout(null);
+		GamePanel gamePanel = new GamePanel();
 		gamePanel.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
 		add(gamePanel);
 	}
 	
-	
-	@Override
-	public void paint(Graphics g) {
-		super.paintComponents(g);
-		
-		BufferedImage bufferBackGround = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-	    Graphics bufferbackGraphics = bufferBackGround.getGraphics();
-	    
-	    bufferbackGraphics.drawImage(backImage, 0, 0, getWidth(), getHeight(), this);
-	    background.paintIcon(this, bufferbackGraphics, 0, 0);
-	    
-	    g.drawImage(bufferBackGround, 0, 0, this);
-	    
-	    BufferedImage bufferPlaneImage = new BufferedImage(planeImage.getWidth(null), planeImage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-	    Graphics bufferGraphics = bufferPlaneImage.getGraphics();
-	    
-	    bufferGraphics.drawImage(planeImage, 0, 0, planeImage.getWidth(null), planeImage.getHeight(null), this);
-	    planeIcon.paintIcon(this, bufferGraphics, 0, 0);
-	    
-	    g.drawImage(bufferPlaneImage, x, y, this);
-	}
-	
 	public static void main(String args[]) {
 		game g = new game("1944");
-		
-	}
-	
-	public void Move() {
-		// 비행기가 계속 깜빡거리는데, 더블 버퍼링을 통해 해결 가능?
-		while(isUP == true || isDOWN == true || isLEFT == true || isRIGHT == true) {
-			if (isUP == true) {
-				if (y > 450)
-					y -= 1;
-				else 
-					y = 450;
-			}
-			if (isDOWN == true) {
-				if (y >= background.getIconHeight() - planeImage.getHeight(this))
-					y = background.getIconHeight() - planeImage.getHeight(this);
-				else 
-					y += 1;
-			}
-			if (isLEFT == true) {
-				if (x <= 0) 
-					x = 0;
-				else 
-					x -= 2;
-			}
-			if (isRIGHT == true) {
-				if (x < background.getIconWidth() - planeImage.getWidth(this))
-					x += 2;
-				else
-					x = background.getIconWidth() - planeImage.getWidth(this);
-			}
-			try {
-				Thread.sleep(16);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			SwingUtilities.invokeLater(() -> repaint());
-		}
-	}
-
-	class MyRunnable implements Runnable {
-		private volatile boolean isRunning = true;
-		
-		@Override
-		public void run() {
-			while(isRunning) {
-				try {
-					Move();	
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
-	class MykeyListner implements KeyListener {
-		@Override
-		public void keyTyped(KeyEvent e) {}
-		@Override
-		public void keyPressed(KeyEvent e) {
-			// TODO Auto-generated method stub
-			switch (e.getKeyCode()) {
-			case KeyEvent.VK_LEFT:
-				isLEFT = true;
-				break;
-			case KeyEvent.VK_RIGHT:
-				isRIGHT = true;
-				break;
-			case KeyEvent.VK_UP:
-				isUP = true;
-				break;
-			case KeyEvent.VK_DOWN:
-				isDOWN = true;
-				break;
-			}
-		}
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-			// TODO Auto-generated method stub
-			switch (e.getKeyCode()) {
-			case KeyEvent.VK_LEFT:
-				isLEFT = false;
-				break;
-			case KeyEvent.VK_RIGHT:
-				isRIGHT = false;
-				break;
-			case KeyEvent.VK_UP:
-				isUP = false;
-				break;
-			case KeyEvent.VK_DOWN:
-				isDOWN = false;
-				break;
-			}
-		}
 	}
 }
 
