@@ -1,35 +1,21 @@
 package planegame;
 
-import java.awt.*;
-import java.awt.RenderingHints.Key;
-import java.awt.event.*;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferDouble;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.*;
-
-import com.sun.tools.javac.Main;
 
 public class game extends JFrame {	
 	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
 
-
 	public game(String title) {
 		super(title);
-		//setBounds(300, 100, background.getIconWidth(), background.getIconHeight());
+		GamePanel gamePanel = new GamePanel();
 		setResizable(false);
 		setIgnoreRepaint(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 		
-		GamePanel gamePanel = new GamePanel();
 		gamePanel.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
 		add(gamePanel);
+		setBounds(300, 100, background.getIconWidth(), background.getIconHeight());
 	}
 	
 	public static void main(String args[]) {
