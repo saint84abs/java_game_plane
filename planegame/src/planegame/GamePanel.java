@@ -16,9 +16,9 @@ public class GamePanel extends JPanel {
 	private Image backImage = new ImageIcon("image/myBackGround.jpg").getImage();
 	private Image planeImage = new ImageIcon("image/myPlane.png").getImage();
 	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
-	private List<Bullet> bullets = new ArrayList<>();
-	// 키 이벤트용 변수
+	private List<Bullet> bullets = new ArrayList<>();// 키 이벤트용 변수
 	private int planeX = 200, planeY = 720;
+	private int bulletX, bulletY, damage;
 	private boolean isUP, isDOWN, isLEFT, isRIGHT, isSPACE;
 	// 스레드용 변수
 	private Thread thread_plane = new Thread(new MyRunnable());
@@ -29,8 +29,12 @@ public class GamePanel extends JPanel {
 		setVisible(true);
 		
 		JPanel gamePanel = new JPanel();
+		GameLoop gameLoop = new GameLoop(gamePanel, 1000 / 60);
+		Thread loopThread = new Thread(gameLoop);
+		
 		gamePanel.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
 		add(gamePanel);
+		loopThread.start();
 		thread_plane.start();
 	}
 	
@@ -47,9 +51,39 @@ public class GamePanel extends JPanel {
 	    
 	    // 발사되는 & 발사될 총알 그리기
 	    // bullets는 객체를 담는 컬렉션을 참조
-	    for (Bullet bullet : bullets) {
-	    	
+	    if (isSPACE == true) {
+			bullets.add(new Bullet(planeX, planeY, damage));
+		    for (Bullet bullet : bullets) {
+		        bullet.move();
+		        if (bullet.getY() < 0) {
+		            bullets.remove(bullet);
+		        } else {
+		            g.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
+		        }
+		    }
 	    }
+	}
+	
+	public class GameLoop implements Runnable {
+		private JPanel gamePanel;
+		private int delay;
+		
+		public GameLoop(JPanel gamePanel, int delay) {
+			this.gamePanel = gamePanel;
+			this.delay = delay;
+		}
+		
+		@Override
+		public void run() {
+			try {
+				while (true) {
+					gamePanel.repaint();
+					Thread.sleep(delay);
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void Move() {
@@ -77,6 +111,11 @@ public class GamePanel extends JPanel {
 					planeX += 2;
 				else
 					planeX = background.getIconWidth() - planeImage.getWidth(this);
+			}
+			if (isSPACE == true) {
+				if (bulletY < 0) {
+					
+				}
 			}
 			try {
 				Thread.sleep(13);
@@ -157,10 +196,11 @@ public class GamePanel extends JPanel {
 			case KeyEvent.VK_DOWN:
 				isDOWN = false;
 				break;
-			case KeyEvent.VK_SPACE:
-				isSPACE = false;
-				break;
-			}
+	        case KeyEvent.VK_SPACE:
+	            isSPACE = false;
+	            bullets.add(new Bullet(planeX, planeY, damage));
+	            break;
+	    }
 		}
 	}
 }
