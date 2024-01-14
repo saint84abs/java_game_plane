@@ -16,12 +16,15 @@ public class GamePanel extends JPanel {
 	private Image backImage = new ImageIcon("image/myBackGround.jpg").getImage();
 	private Image planeImage = new ImageIcon("image/myPlane.png").getImage();
 	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
+	
 	private List<Bullet> bullets = new ArrayList<>();// 키 이벤트용 변수
+	private List<Bullet> bulletsToRemove = new ArrayList<Bullet>();
+	
 	private int planeX = 200, planeY = 720;
 	private int bulletX, bulletY, damage;
 	private boolean isUP, isDOWN, isLEFT, isRIGHT, isSPACE;
 	// 스레드용 변수
-	private Thread thread_plane = new Thread(new MyRunnable());
+//	private Thread thread_plane = new Thread(new MyRunnable());
 	
 	public GamePanel() {
 		setFocusable(true);
@@ -34,8 +37,8 @@ public class GamePanel extends JPanel {
 		
 		gamePanel.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
 		add(gamePanel);
+//		thread_plane.start();
 		loopThread.start();
-		thread_plane.start();
 	}
 	
 	@Override 
@@ -48,20 +51,20 @@ public class GamePanel extends JPanel {
 		g2d.drawImage(backImage, 0, 0, this);
 		g2d.drawImage(planeImage, planeX, planeY, this);
 	    g.drawImage(backBuffer, 0, 0, this);
-	    
+
 	    // 발사되는 & 발사될 총알 그리기
 	    // bullets는 객체를 담는 컬렉션을 참조
-	    if (isSPACE == true) {
-			bullets.add(new Bullet(planeX, planeY, damage));
-		    for (Bullet bullet : bullets) {
-		        bullet.move();
-		        if (bullet.getY() < 0) {
-		            bullets.remove(bullet);
-		        } else {
-		            g.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
-		        }
-		    }
-	    }
+    	bullets.add(new Bullet(planeX, planeY, damage));
+    	for (Bullet bullet : bullets) {
+    		if (bullet.getY() > 0) {
+    			g.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
+    		}
+    		else {
+	        	bulletsToRemove.add(bullet);
+	        }
+    	}
+	    bullets.removeAll(bulletsToRemove);
+	    
 	}
 	
 	public class GameLoop implements Runnable {
@@ -72,12 +75,19 @@ public class GamePanel extends JPanel {
 			this.gamePanel = gamePanel;
 			this.delay = delay;
 		}
-		
+
+		// 총알 하나하나 다 객체를 부여해야하나?
+		// 그렇지 않고서야 충돌판정과 데미지 판정, 실시간 이동등을 구현할 수 없을거 같은데
+		// 그러면 객체 하나하나가 다 스레드를 가지고, 판정을 가진다는 이야기
+		// 메모리에 문제가 있지 않을까?
 		@Override
 		public void run() {
 			try {
-				while (true) {
+				while (true) {	 
 					gamePanel.repaint();
+					for(Bullet bullet : bullets)
+						bullet.move();
+					Move();
 					Thread.sleep(delay);
 				}
 			} catch (InterruptedException e) {
@@ -85,6 +95,7 @@ public class GamePanel extends JPanel {
 			}
 		}
 	}
+
 
 	public void Move() {
 		while(isUP == true || isDOWN == true || isLEFT == true || isRIGHT == true) {
@@ -113,9 +124,7 @@ public class GamePanel extends JPanel {
 					planeX = background.getIconWidth() - planeImage.getWidth(this);
 			}
 			if (isSPACE == true) {
-				if (bulletY < 0) {
-					
-				}
+
 			}
 			try {
 				Thread.sleep(13);
@@ -126,27 +135,21 @@ public class GamePanel extends JPanel {
 			SwingUtilities.invokeLater(() -> repaint());
 		}
 	}
-	
-	public void Fire() {
-		while (isSPACE == true) {
-			
-		}
-	}
-
-	class MyRunnable implements Runnable {
-		private volatile boolean isRunning = true;
-		
-		@Override
-		public void run() {
-			while(isRunning) {
-				try {
-					Move();	
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+//
+//	class MyRunnable implements Runnable {
+//		private volatile boolean isRunning = true;
+//		
+//		@Override
+//		public void run() {
+//			while(isRunning) {
+//				try {
+//					Move();	
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//	}
 
 	class MyKeyListner implements KeyListener {
 		@Override
@@ -200,7 +203,7 @@ public class GamePanel extends JPanel {
 	            isSPACE = false;
 	            bullets.add(new Bullet(planeX, planeY, damage));
 	            break;
-	    }
+			}
 		}
 	}
 }

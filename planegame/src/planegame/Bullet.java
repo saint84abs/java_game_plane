@@ -1,6 +1,9 @@
 package planegame;
 
+import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.ImageObserver;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 
@@ -13,10 +16,29 @@ public class Bullet {
 		this.bulletX = x;
 		this.bulletY = y;
 		this.damage = damage;
+//		bulletTime bt = new bulletTime();
+//		Thread bulletThread = new Thread(bt);
+//		bulletThread.start();
 	}
-	
+	// 총알이 실시간으로 움직일 수 있도록 스레드로 구성
 	public void move() {
 		bulletY -= speed;
+	}
+	
+	public void draw(Graphics g, ImageObserver observer) {
+		g.drawImage(getImage(), getX(), getY(), observer);
+	}
+	
+	public class bulletTime implements Runnable {
+		
+		@Override
+		public void run() {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public int getX() {
