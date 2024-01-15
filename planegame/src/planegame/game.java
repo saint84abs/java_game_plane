@@ -13,7 +13,6 @@ public class game extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 		
-		gamePanel.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
 		add(gamePanel);
 		setBounds(300, 100, background.getIconWidth(), background.getIconHeight());
 	}

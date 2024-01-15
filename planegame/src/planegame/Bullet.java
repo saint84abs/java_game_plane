@@ -20,7 +20,7 @@ public class Bullet {
 //		Thread bulletThread = new Thread(bt);
 //		bulletThread.start();
 	}
-	// 총알이 실시간으로 움직일 수 있도록 스레드로 구성
+
 	public void move() {
 		bulletY -= speed;
 	}

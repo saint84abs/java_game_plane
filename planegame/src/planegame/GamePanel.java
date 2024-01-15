@@ -1,12 +1,13 @@
 package planegame;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import javax.swing.Timer;
+
 
 public class GamePanel extends JPanel {
 	// double buffering용 변수
@@ -25,8 +26,17 @@ public class GamePanel extends JPanel {
 	private boolean isUP, isDOWN, isLEFT, isRIGHT, isSPACE;
 	// 스레드용 변수
 //	private Thread thread_plane = new Thread(new MyRunnable());
+	private boolean inGame = false;
+	private Dimension d;
+	private Timer timer;
+	private int FPS = 60;
 	
 	public GamePanel() {
+		initGamePanel();
+		//GameLoop.initVariables();
+	}
+	
+	private void initGamePanel() {
 		setFocusable(true);
 		addKeyListener(new MyKeyListner());
 		setVisible(true);
@@ -46,13 +56,22 @@ public class GamePanel extends JPanel {
 		super.paintComponent(g);
 		// 배경과 비행기 그리기
 		g.drawImage(backImage, 0, 0, backImage.getWidth(this), backImage.getHeight(this), this);
+		DrawPlane(g);
+
+		DrawBullet(g);
+	}
+	
+	// 비행기 그리기
+	private void DrawPlane(Graphics g) {
 		backBuffer = new BufferedImage(background.getIconWidth(), background.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 		g2d = backBuffer.createGraphics();
 		g2d.drawImage(backImage, 0, 0, this);
 		g2d.drawImage(planeImage, planeX, planeY, this);
 	    g.drawImage(backBuffer, 0, 0, this);
-
-	    // 발사되는 & 발사될 총알 그리기
+	}
+	
+	private void DrawBullet(Graphics g) {
+		// 발사되는 & 발사될 총알 그리기
 	    // bullets는 객체를 담는 컬렉션을 참조
     	bullets.add(new Bullet(planeX, planeY, damage));
     	for (Bullet bullet : bullets) {
@@ -64,32 +83,43 @@ public class GamePanel extends JPanel {
 	        }
     	}
 	    bullets.removeAll(bulletsToRemove);
-	    
 	}
 	
-	public class GameLoop implements Runnable {
+	public class GameLoop implements Runnable, ActionListener {
 		private JPanel gamePanel;
 		private int delay;
+		private Timer timer;
+		private Dimension d;
+		
+		private void initVariables(int fps) {
+			d = new Dimension(400, 400);
+			timer = new Timer(1000 / FPS, this);
+			timer.start();
+		}
+		
+		@Override 
+		public void actionPerformed(ActionEvent e) {
+			repaint();
+		}
 		
 		public GameLoop(JPanel gamePanel, int delay) {
 			this.gamePanel = gamePanel;
 			this.delay = delay;
+			initVariables(delay);
 		}
 
-		// 총알 하나하나 다 객체를 부여해야하나?
-		// 그렇지 않고서야 충돌판정과 데미지 판정, 실시간 이동등을 구현할 수 없을거 같은데
-		// 그러면 객체 하나하나가 다 스레드를 가지고, 판정을 가진다는 이야기
-		// 메모리에 문제가 있지 않을까?
 		@Override
 		public void run() {
 			try {
 				while (true) {	 
-					gamePanel.repaint();
+					// 에러 발생
+					// 사용중인 객체에서 지워짐
 					for(Bullet bullet : bullets)
 						bullet.move();
 					Move();
 					Thread.sleep(delay);
 				}
+
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
