@@ -8,7 +8,6 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.Timer;
 
-
 public class GamePanel extends JPanel {
 	// double buffering용 변수
 	private BufferedImage backBuffer;
@@ -25,15 +24,14 @@ public class GamePanel extends JPanel {
 	private int bulletX, bulletY, damage;
 	private boolean isUP, isDOWN, isLEFT, isRIGHT, isSPACE;
 	// 스레드용 변수
-//	private Thread thread_plane = new Thread(new MyRunnable());
 	private boolean inGame = false;
 	private Dimension d;
 	private Timer timer;
-	private int FPS = 60;
+	private int FPS = 75;
+	private int fireDelay = 100;
 	
 	public GamePanel() {
 		initGamePanel();
-		//GameLoop.initVariables();
 	}
 	
 	private void initGamePanel() {
@@ -42,26 +40,23 @@ public class GamePanel extends JPanel {
 		setVisible(true);
 		
 		JPanel gamePanel = new JPanel();
-		GameLoop gameLoop = new GameLoop(gamePanel, 1000 / 60);
+		GameLoop gameLoop = new GameLoop(this, 1000 / FPS);
 		Thread loopThread = new Thread(gameLoop);
 		
 		gamePanel.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
 		add(gamePanel);
-//		thread_plane.start();
 		loopThread.start();
 	}
 	
 	@Override 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		// 배경과 비행기 그리기
 		g.drawImage(backImage, 0, 0, backImage.getWidth(this), backImage.getHeight(this), this);
+		
 		DrawPlane(g);
-
-		DrawBullet(g);
+//		DrawBullet(g);
 	}
 	
-	// 비행기 그리기
 	private void DrawPlane(Graphics g) {
 		backBuffer = new BufferedImage(background.getIconWidth(), background.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 		g2d = backBuffer.createGraphics();
@@ -71,61 +66,61 @@ public class GamePanel extends JPanel {
 	}
 	
 	private void DrawBullet(Graphics g) {
-		// 발사되는 & 발사될 총알 그리기
-	    // bullets는 객체를 담는 컬렉션을 참조
-    	bullets.add(new Bullet(planeX, planeY, damage));
-    	for (Bullet bullet : bullets) {
-    		if (bullet.getY() > 0) {
-    			g.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
-    		}
-    		else {
-	        	bulletsToRemove.add(bullet);
-	        }
-    	}
-	    bullets.removeAll(bulletsToRemove);
+		bullets.add(new Bullet(planeX, planeY, damage));
+		for (Bullet bullet : bullets) {
+			if (bullet.getY() > 0) {
+				g.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
+				bullet.move();
+			}
+			else {
+				bulletsToRemove.add(bullet);
+			}
+		}
+		bullets.removeAll(bulletsToRemove);
 	}
 	
 	public class GameLoop implements Runnable, ActionListener {
 		private JPanel gamePanel;
 		private int delay;
 		private Timer timer;
-		private Dimension d;
 		
 		private void initVariables(int fps) {
 			d = new Dimension(400, 400);
-			timer = new Timer(1000 / FPS, this);
+			timer = new Timer(1000 / fps, this);
 			timer.start();
 		}
 		
 		@Override 
 		public void actionPerformed(ActionEvent e) {
-			repaint();
+			gamePanel.repaint();
 		}
 		
 		public GameLoop(JPanel gamePanel, int delay) {
 			this.gamePanel = gamePanel;
 			this.delay = delay;
-			initVariables(delay);
+			initVariables(FPS);
+			 
+//			while (true) {
+//				if (fireDelay <= 0 && isSPACE) {
+//					DrawBullet(gamePanel.getGraphics());
+//					fireDelay = 100;
+//				}
+//				fireDelay--;
+//			}
 		}
 
 		@Override
 		public void run() {
 			try {
 				while (true) {	 
-					// 에러 발생
-					// 사용중인 객체에서 지워짐
-					for(Bullet bullet : bullets)
-						bullet.move();
 					Move();
 					Thread.sleep(delay);
 				}
-
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-
 
 	public void Move() {
 		while(isUP == true || isDOWN == true || isLEFT == true || isRIGHT == true) {
@@ -154,39 +149,21 @@ public class GamePanel extends JPanel {
 					planeX = background.getIconWidth() - planeImage.getWidth(this);
 			}
 			if (isSPACE == true) {
-
+//				DrawBullet(g2d);
 			}
 			try {
 				Thread.sleep(13);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			SwingUtilities.invokeLater(() -> repaint());
 		}
 	}
-//
-//	class MyRunnable implements Runnable {
-//		private volatile boolean isRunning = true;
-//		
-//		@Override
-//		public void run() {
-//			while(isRunning) {
-//				try {
-//					Move();	
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
-//	}
 
 	class MyKeyListner implements KeyListener {
 		@Override
 		public void keyTyped(KeyEvent e) {}
 		@Override
 		public void keyPressed(KeyEvent e) {
-			// TODO Auto-generated method stub
 			switch (e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
 				isLEFT = true;
@@ -202,20 +179,12 @@ public class GamePanel extends JPanel {
 				break;
 			case KeyEvent.VK_SPACE:
 				isSPACE = true;
-				System.out.println("boom");
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				break;
 			}
 		}
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-			// TODO Auto-generated method stub
 			switch (e.getKeyCode()) {
 			case KeyEvent.VK_LEFT:
 				isLEFT = false;
@@ -229,10 +198,9 @@ public class GamePanel extends JPanel {
 			case KeyEvent.VK_DOWN:
 				isDOWN = false;
 				break;
-	        case KeyEvent.VK_SPACE:
-	            isSPACE = false;
-	            bullets.add(new Bullet(planeX, planeY, damage));
-	            break;
+			case KeyEvent.VK_SPACE:
+				isSPACE = false;
+				break;
 			}
 		}
 	}

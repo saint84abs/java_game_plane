@@ -10,15 +10,13 @@ import javax.swing.ImageIcon;
 public class Bullet {
 	private Image bullet_Level_1 = new ImageIcon("image/bullet.png").getImage();
 	private int bulletX, bulletY, damage;
-	private int speed = 7;
+	private int speed = 25;
+	private int FireDelay = 50;
 	
 	public Bullet(int x, int y, int damage) {
 		this.bulletX = x;
 		this.bulletY = y;
 		this.damage = damage;
-//		bulletTime bt = new bulletTime();
-//		Thread bulletThread = new Thread(bt);
-//		bulletThread.start();
 	}
 
 	public void move() {
@@ -27,18 +25,6 @@ public class Bullet {
 	
 	public void draw(Graphics g, ImageObserver observer) {
 		g.drawImage(getImage(), getX(), getY(), observer);
-	}
-	
-	public class bulletTime implements Runnable {
-		
-		@Override
-		public void run() {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	public int getX() {
