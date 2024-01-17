@@ -24,7 +24,7 @@ public class GamePanel extends JPanel {
 	private int bulletX, bulletY, damage;
 	private boolean isUP, isDOWN, isLEFT, isRIGHT, isSPACE;
 	// 스레드용 변수
-	private boolean inGame = false;
+	private boolean inGame = true;
 	private Dimension d;
 	private Timer timer;
 	private int FPS = 75;
@@ -54,7 +54,7 @@ public class GamePanel extends JPanel {
 		g.drawImage(backImage, 0, 0, backImage.getWidth(this), backImage.getHeight(this), this);
 		
 		DrawPlane(g);
-//		DrawBullet(g);
+		DrawBullet(g);
 	}
 	
 	private void DrawPlane(Graphics g) {
@@ -66,17 +66,11 @@ public class GamePanel extends JPanel {
 	}
 	
 	private void DrawBullet(Graphics g) {
-		bullets.add(new Bullet(planeX, planeY, damage));
 		for (Bullet bullet : bullets) {
 			if (bullet.getY() > 0) {
 				g.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
-				bullet.move();
-			}
-			else {
-				bulletsToRemove.add(bullet);
 			}
 		}
-		bullets.removeAll(bulletsToRemove);
 	}
 	
 	public class GameLoop implements Runnable, ActionListener {
@@ -99,20 +93,31 @@ public class GamePanel extends JPanel {
 			this.gamePanel = gamePanel;
 			this.delay = delay;
 			initVariables(FPS);
-			 
-//			while (true) {
-//				if (fireDelay <= 0 && isSPACE) {
-//					DrawBullet(gamePanel.getGraphics());
-//					fireDelay = 100;
-//				}
-//				fireDelay--;
-//			}
+			
 		}
 
 		@Override
 		public void run() {
 			try {
-				while (true) {	 
+				while (true) {	
+					while (inGame) {
+						if (fireDelay <= 0) {
+							bullets.add(new Bullet(planeX, planeY, damage));
+							fireDelay = 100;
+						}
+						else 
+							fireDelay -= 2;
+						for (Bullet bullet : bullets) {
+							if (bullet.getY() > 0) {
+								bullet.move();
+							}
+							else {
+								bulletsToRemove.add(bullet);
+							}
+						}
+						bullets.removeAll(bulletsToRemove);
+					}
+					
 					Move();
 					Thread.sleep(delay);
 				}
@@ -161,7 +166,16 @@ public class GamePanel extends JPanel {
 
 	class MyKeyListner implements KeyListener {
 		@Override
-		public void keyTyped(KeyEvent e) {}
+		public void keyTyped(KeyEvent e) {
+			switch (e.getKeyCode()) {
+			case KeyEvent.VK_S:
+				if (inGame == true)
+					inGame = true;
+				else 
+					inGame = false;
+			}
+			
+		}
 		@Override
 		public void keyPressed(KeyEvent e) {
 			switch (e.getKeyCode()) {
