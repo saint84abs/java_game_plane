@@ -11,7 +11,6 @@ public class Bullet {
 	private Image bullet_Level_1 = new ImageIcon("image/bullet.png").getImage();
 	private int bulletX, bulletY, damage;
 	private int speed = 8;
-	private int FireDelay = 50;
 	
 	public Bullet(int x, int y, int damage) {
 		this.bulletX = x;

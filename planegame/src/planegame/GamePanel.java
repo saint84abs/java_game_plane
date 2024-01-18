@@ -1,6 +1,7 @@
 package planegame;
 
 import java.awt.*;
+import java.awt.RenderingHints.Key;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ public class GamePanel extends JPanel {
 	private boolean isUP, isDOWN, isLEFT, isRIGHT, isSPACE;
 	// 스레드용 변수
 	private boolean inGame = true;
-	private Dimension d;
 	private Timer timer;
 	private int FPS = 75;
 	private int fireDelay = 100;
@@ -76,10 +76,8 @@ public class GamePanel extends JPanel {
 	public class GameLoop implements Runnable, ActionListener {
 		private JPanel gamePanel;
 		private int delay;
-		private Timer timer;
-		
+		KeyEvent e;
 		private void initVariables(int fps) {
-			d = new Dimension(400, 400);
 			timer = new Timer(1000 / fps, this);
 			timer.start();
 		}
@@ -93,33 +91,33 @@ public class GamePanel extends JPanel {
 			this.gamePanel = gamePanel;
 			this.delay = delay;
 			initVariables(FPS);
-			
+			gamePanel.addKeyListener(new MyKeyListner());
+			gamePanel.setFocusable(true);
 		}
-
+		
 		@Override
 		public void run() {
 			try {
-				while (true) {	
-					while (inGame) {
-						if (fireDelay <= 0) {
-							bullets.add(new Bullet(planeX, planeY, damage));
-							fireDelay = 100;
-						}
-						else 
-							fireDelay -= 2;
-						for (Bullet bullet : bullets) {
-							if (bullet.getY() > 0) {
-								bullet.move();
-							}
-							else {
-								bulletsToRemove.add(bullet);
-							}
-						}
-						bullets.removeAll(bulletsToRemove);
+				while (inGame) {
+					if (fireDelay <= 0) {
+						bullets.add(new Bullet(planeX, planeY, damage));
+						fireDelay = 100;
 					}
+					else 
+						fireDelay -= 2;
 					
-					Move();
+					for (Bullet bullet : bullets) {
+						if (bullet.getY() > 0) {
+							bullet.move();
+						}
+						else {
+							bulletsToRemove.add(bullet);
+						}
+					}
+					bullets.removeAll(bulletsToRemove);
+					gamePanel.repaint();
 					Thread.sleep(delay);
+					Move(e);
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -127,40 +125,30 @@ public class GamePanel extends JPanel {
 		}
 	}
 
-	public void Move() {
-		while(isUP == true || isDOWN == true || isLEFT == true || isRIGHT == true) {
-			if (isUP == true) {
-				if (planeY > 450)
-					planeY -= 1;
-				else 
-					planeY = 450;
-			}
-			if (isDOWN == true) {
-				if (planeY >= background.getIconHeight() - planeImage.getHeight(this))
-					planeY = background.getIconHeight() - planeImage.getHeight(this);
-				else 
-					planeY += 1;
-			}
-			if (isLEFT == true) {
-				if (planeX <= 0) 
-					planeX = 0;
-				else 
-					planeX -= 2;
-			}
-			if (isRIGHT == true) {
-				if (planeX < background.getIconWidth() - planeImage.getWidth(this))
-					planeX += 2;
-				else
-					planeX = background.getIconWidth() - planeImage.getWidth(this);
-			}
-			if (isSPACE == true) {
-//				DrawBullet(g2d);
-			}
-			try {
-				Thread.sleep(13);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+	public void Move(KeyEvent e) {
+		if (isLEFT) {
+			if (planeX <= 0) 
+				planeX = 0;
+			else 
+				planeX -= 2;
+		}
+		if (isRIGHT) {
+			if (planeX < background.getIconWidth() - planeImage.getWidth(this))
+				planeX += 2;
+			else
+				planeX = background.getIconWidth() - planeImage.getWidth(this);
+		}
+		if (isUP) {
+			if (planeY > 450)
+				planeY -= 1;
+			else 
+				planeY = 450;
+		}
+		if (isDOWN) {
+			if (planeY >= background.getIconHeight() - planeImage.getHeight(this))
+				planeY = background.getIconHeight() - planeImage.getHeight(this);
+			else 
+				planeY += 1;
 		}
 	}
 
@@ -174,7 +162,6 @@ public class GamePanel extends JPanel {
 				else 
 					inGame = false;
 			}
-			
 		}
 		@Override
 		public void keyPressed(KeyEvent e) {
@@ -219,3 +206,38 @@ public class GamePanel extends JPanel {
 		}
 	}
 }
+
+/*
+ * @Override
+		public void run() {
+//			try {
+//				while (inGame) {
+//					Move();
+//					
+//					if (fireDelay <= 0) {
+//						bullets.add(new Bullet(planeX, planeY, damage));
+//						fireDelay = 100;
+//					}
+//					else 
+//						fireDelay -= 2;
+//					
+//					for (Bullet bullet : bullets) {
+//						if (bullet.getY() > 0) {
+//							bullet.move();
+//						}
+//						else {
+//							bulletsToRemove.add(bullet);
+//						}
+//					}
+//					bullets.removeAll(bulletsToRemove);
+//					gamePanel.repaint();
+//					Thread.sleep(delay);
+//				}
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+			
+		}
+	}
+ * 
+ * */
