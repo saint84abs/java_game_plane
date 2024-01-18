@@ -1,7 +1,6 @@
 package planegame;
 
 import java.awt.*;
-import java.awt.RenderingHints.Key;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -16,12 +15,14 @@ public class GamePanel extends JPanel {
 	// 화면에 출력되는 이미지용 변수
 	private Image backImage = new ImageIcon("image/myBackGround.jpg").getImage();
 	private Image planeImage = new ImageIcon("image/myPlane.png").getImage();
+	private Image EnemyPlane_BOSS = new ImageIcon("image/EnemyPlane_BOSS.png").getImage();
 	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
-	
-	private List<Bullet> bullets = new ArrayList<>();// 키 이벤트용 변수
+	// 키 이벤트용 변수
+	private List<Bullet> bullets = new ArrayList<>();
 	private List<Bullet> bulletsToRemove = new ArrayList<Bullet>();
-	
+	// 객체 위치 전용 변수
 	private int planeX = 200, planeY = 720;
+	private int EnemyPlaneX = 50, EnemyPlaneY = 100;
 	private int bulletX, bulletY, damage;
 	private boolean isUP, isDOWN, isLEFT, isRIGHT, isSPACE;
 	// 스레드용 변수
@@ -45,30 +46,35 @@ public class GamePanel extends JPanel {
 		
 		gamePanel.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
 		add(gamePanel);
-		loopThread.start();
+		loopThread.start();		
+		
+		backBuffer = new BufferedImage(background.getIconWidth(), background.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+		g2d = backBuffer.createGraphics();
+		g2d.drawImage(backImage, 0, 0, this);
 	}
 	
 	@Override 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(backImage, 0, 0, backImage.getWidth(this), backImage.getHeight(this), this);
-		
+		g2d.drawImage(backImage, 0, 0, this);
 		DrawPlane(g);
+		DrawEnemyBossPlane(g);
 		DrawBullet(g);
+		g.drawImage(backBuffer, 0, 0, this);
 	}
 	
 	private void DrawPlane(Graphics g) {
-		backBuffer = new BufferedImage(background.getIconWidth(), background.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
-		g2d = backBuffer.createGraphics();
-		g2d.drawImage(backImage, 0, 0, this);
 		g2d.drawImage(planeImage, planeX, planeY, this);
-	    g.drawImage(backBuffer, 0, 0, this);
+	}
+	
+	private void DrawEnemyBossPlane(Graphics g) {
+		g2d.drawImage(EnemyPlane_BOSS, EnemyPlaneX, EnemyPlaneY, this);
 	}
 	
 	private void DrawBullet(Graphics g) {
 		for (Bullet bullet : bullets) {
 			if (bullet.getY() > 0) {
-				g.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
+				g2d.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
 			}
 		}
 	}
