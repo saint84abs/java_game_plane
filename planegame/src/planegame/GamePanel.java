@@ -12,19 +12,21 @@ public class GamePanel extends JPanel {
 	// double buffering용 변수
 	private BufferedImage backBuffer;
 	private Graphics2D g2d;
-	// 화면에 출력되는 이미지용 변수
+	// 객체 위치 전용 변수
+	private int planeX = 200, planeY = 720;
+	private int EnemyPlaneX = -12, EnemyPlaneY = 10;
+	private int bulletX, bulletY, damage;
+	private boolean isUP, isDOWN, isLEFT, isRIGHT, isSPACE;
+	// 배경 및 플레이어 캐릭터 이미지 변수
 	private Image backImage = new ImageIcon("image/myBackGround.jpg").getImage();
 	private Image planeImage = new ImageIcon("image/myPlane.png").getImage();
+	// 적 객체용 이미지 변수
 	private Image EnemyPlane_BOSS = new ImageIcon("image/EnemyPlane_BOSS.png").getImage();
+	private Enemy EnemyPlane_Normal = new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_Normal.png");
 	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
 	// 키 이벤트용 변수
 	private List<Bullet> bullets = new ArrayList<>();
 	private List<Bullet> bulletsToRemove = new ArrayList<Bullet>();
-	// 객체 위치 전용 변수
-	private int planeX = 200, planeY = 720;
-	private int EnemyPlaneX = 50, EnemyPlaneY = 100;
-	private int bulletX, bulletY, damage;
-	private boolean isUP, isDOWN, isLEFT, isRIGHT, isSPACE;
 	// 스레드용 변수
 	private boolean inGame = true;
 	private Timer timer;
@@ -61,6 +63,8 @@ public class GamePanel extends JPanel {
 		DrawEnemyBossPlane(g);
 		DrawBullet(g);
 		g.drawImage(backBuffer, 0, 0, this);
+		EnemyPlane_Normal.draw(g);
+		EnemyPlane_Normal.move();
 	}
 	
 	private void DrawPlane(Graphics g) {
