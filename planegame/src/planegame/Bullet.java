@@ -2,6 +2,7 @@ package planegame;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.image.ImageObserver;
 import java.io.IOException;
 
@@ -20,6 +21,10 @@ public class Bullet {
 
 	public void move() {
 		bulletY -= speed;
+	}
+	
+	public Rectangle getBounds() {
+		return new Rectangle(bulletX, bulletY, bullet_Level_1.getWidth(null), bullet_Level_1.getHeight(null));
 	}
 	
 	public void draw(Graphics g, ImageObserver observer) {

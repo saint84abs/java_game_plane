@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.Timer;
@@ -21,12 +22,13 @@ public class GamePanel extends JPanel {
 	private Image backImage = new ImageIcon("image/myBackGround.jpg").getImage();
 	private Image planeImage = new ImageIcon("image/myPlane.png").getImage();
 	// 적 객체용 이미지 변수
-	private Image EnemyPlane_BOSS = new ImageIcon("image/EnemyPlane_BOSS.png").getImage();
+	private Enemy EnemyPlane_BOSS = new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_BOSS.png");
 	private Enemy EnemyPlane_Normal = new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_Normal.png");
 	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
 	// 키 이벤트용 변수
-	private List<Bullet> bullets = new ArrayList<>();
+	private List<Bullet> bullets = new ArrayList<Bullet>();
 	private List<Bullet> bulletsToRemove = new ArrayList<Bullet>();
+	private List<Enemy> enemies = new ArrayList<Enemy>();
 	// 스레드용 변수
 	private boolean inGame = true;
 	private Timer timer;
@@ -46,6 +48,8 @@ public class GamePanel extends JPanel {
 		GameLoop gameLoop = new GameLoop(this, 1000 / FPS);
 		Thread loopThread = new Thread(gameLoop);
 		
+		enemies.add(EnemyPlane_BOSS);
+		
 		gamePanel.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
 		add(gamePanel);
 		loopThread.start();		
@@ -60,19 +64,15 @@ public class GamePanel extends JPanel {
 		super.paintComponent(g);
 		g2d.drawImage(backImage, 0, 0, this);
 		DrawPlane(g);
-		DrawEnemyBossPlane(g);
 		DrawBullet(g);
 		g.drawImage(backBuffer, 0, 0, this);
-		EnemyPlane_Normal.draw(g);
-		EnemyPlane_Normal.move();
+		for (Enemy enemy : enemies) {
+			enemy.draw(g);
+		}
 	}
 	
 	private void DrawPlane(Graphics g) {
 		g2d.drawImage(planeImage, planeX, planeY, this);
-	}
-	
-	private void DrawEnemyBossPlane(Graphics g) {
-		g2d.drawImage(EnemyPlane_BOSS, EnemyPlaneX, EnemyPlaneY, this);
 	}
 	
 	private void DrawBullet(Graphics g) {
@@ -82,11 +82,10 @@ public class GamePanel extends JPanel {
 			}
 		}
 	}
-	
+	// 메인 화면 갱신 루프, 이동과 상호작용을 담당함
 	public class GameLoop implements Runnable, ActionListener {
 		private JPanel gamePanel;
 		private int delay;
-		KeyEvent e;
 		private void initVariables(int fps) {
 			timer = new Timer(1000 / fps, this);
 			timer.start();
@@ -103,6 +102,7 @@ public class GamePanel extends JPanel {
 			initVariables(FPS);
 			gamePanel.addKeyListener(new MyKeyListner());
 			gamePanel.setFocusable(true);
+
 		}
 		
 		@Override
@@ -116,18 +116,31 @@ public class GamePanel extends JPanel {
 					else 
 						fireDelay -= 2;
 					
-					for (Bullet bullet : bullets) {
+					for (Iterator<Bullet> itBullet= bullets.iterator(); itBullet.hasNext();) {
+						Bullet bullet = itBullet.next();
+						
 						if (bullet.getY() > 0) {
 							bullet.move();
 						}
 						else {
 							bulletsToRemove.add(bullet);
+							continue;
+						}
+						
+						for (Iterator<Enemy> itEnemy = enemies.iterator(); itEnemy.hasNext();) {
+							Enemy enemy = itEnemy.next();
+							if (bullet.getBounds().intersects(enemy.getBounds())) {
+								System.out.println("Crack!!");
+								itBullet.remove();
+								itEnemy.remove();
+								break;
+							}
 						}
 					}
-					bullets.removeAll(bulletsToRemove);
+					
 					gamePanel.repaint();
 					Thread.sleep(delay);
-					Move(e);
+					Move();
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -135,7 +148,7 @@ public class GamePanel extends JPanel {
 		}
 	}
 
-	public void Move(KeyEvent e) {
+	public void Move() {
 		if (isLEFT) {
 			if (planeX <= 0) 
 				planeX = 0;
@@ -218,36 +231,5 @@ public class GamePanel extends JPanel {
 }
 
 /*
- * @Override
-		public void run() {
-//			try {
-//				while (inGame) {
-//					Move();
-//					
-//					if (fireDelay <= 0) {
-//						bullets.add(new Bullet(planeX, planeY, damage));
-//						fireDelay = 100;
-//					}
-//					else 
-//						fireDelay -= 2;
-//					
-//					for (Bullet bullet : bullets) {
-//						if (bullet.getY() > 0) {
-//							bullet.move();
-//						}
-//						else {
-//							bulletsToRemove.add(bullet);
-//						}
-//					}
-//					bullets.removeAll(bulletsToRemove);
-//					gamePanel.repaint();
-//					Thread.sleep(delay);
-//				}
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-			
-		}
-	}
  * 
  * */

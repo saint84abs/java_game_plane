@@ -2,6 +2,7 @@ package planegame;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Rectangle;
 
 import javax.swing.ImageIcon;
 
@@ -22,10 +23,14 @@ public class Enemy {
 	
 	public void move() {
 		// 자동적으로 일정 패턴으로 움직여야함
-		if (this.x <= 200)
-			this.x += speed;
+		if (x <= 200)
+			x += speed;
 		else 
-			this.x -= speed;
+			x -= speed;
+	}
+	
+	public Rectangle getBounds() {
+		return new Rectangle(x, y, image.getWidth(null), image.getHeight(null));
 	}
 	
 	public void draw(Graphics g) {
