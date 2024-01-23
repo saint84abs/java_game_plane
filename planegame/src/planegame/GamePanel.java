@@ -16,19 +16,20 @@ public class GamePanel extends JPanel {
 	// 객체 위치 전용 변수
 	private int planeX = 200, planeY = 720;
 	private int EnemyPlaneX = -12, EnemyPlaneY = 10;
-	private int bulletX, bulletY, damage;
+	private int bulletX, bulletY, damage = 1;
 	private boolean isUP, isDOWN, isLEFT, isRIGHT, isSPACE;
 	// 배경 및 플레이어 캐릭터 이미지 변수
 	private Image backImage = new ImageIcon("image/myBackGround.jpg").getImage();
 	private Image planeImage = new ImageIcon("image/myPlane.png").getImage();
 	// 적 객체용 이미지 변수
-	private Enemy EnemyPlane_BOSS = new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_BOSS.png");
+	private Enemy EnemyPlane_BOSS = new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_BOSS.png", 300, 5);
 	private Enemy EnemyPlane_Normal = new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_Normal.png");
 	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
 	// 키 이벤트용 변수
 	private List<Bullet> bullets = new ArrayList<Bullet>();
 	private List<Bullet> bulletsToRemove = new ArrayList<Bullet>();
 	private List<Enemy> enemies = new ArrayList<Enemy>();
+	private List<Enemy> enemiesToRemove = new ArrayList<Enemy>();
 	// 스레드용 변수
 	private boolean inGame = true;
 	private Timer timer;
@@ -102,50 +103,54 @@ public class GamePanel extends JPanel {
 			initVariables(FPS);
 			gamePanel.addKeyListener(new MyKeyListner());
 			gamePanel.setFocusable(true);
-
 		}
 		
 		@Override
 		public void run() {
-			try {
-				while (inGame) {
-					if (fireDelay <= 0) {
-						bullets.add(new Bullet(planeX, planeY, damage));
-						fireDelay = 100;
-					}
-					else 
-						fireDelay -= 2;
-					
-					for (Iterator<Bullet> itBullet= bullets.iterator(); itBullet.hasNext();) {
-						Bullet bullet = itBullet.next();
-						
-						if (bullet.getY() > 0) {
-							bullet.move();
-						}
-						else {
-							bulletsToRemove.add(bullet);
-							continue;
-						}
-						
-						for (Iterator<Enemy> itEnemy = enemies.iterator(); itEnemy.hasNext();) {
-							Enemy enemy = itEnemy.next();
-							if (bullet.getBounds().intersects(enemy.getBounds())) {
-								System.out.println("Crack!!");
-								itBullet.remove();
-								itEnemy.remove();
-								break;
-							}
-						}
-					}
-					
-					gamePanel.repaint();
-					Thread.sleep(delay);
-					Move();
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+		    try {
+		        while (inGame) {
+		            if (fireDelay <= 0) {
+		                bullets.add(new Bullet(planeX, planeY, damage));
+		                fireDelay = 100;
+		            }
+		            else 
+		                fireDelay -= 2;
+
+		            Iterator<Bullet> itBullet = bullets.iterator();
+		            while (itBullet.hasNext()) {
+		                Bullet bullet = itBullet.next();
+
+		                if (bullet.getY() > 0) {
+		                    bullet.move();
+		                    Iterator<Enemy> itEnemy = enemies.iterator();
+		                    while (itEnemy.hasNext()) {
+		                        Enemy enemy = itEnemy.next();
+		                        if (isCollision(enemy, bullet)) {
+		                        	System.out.println(enemy.getHP());
+		                            enemy.hit(bullet);
+		                            if (enemy.isDead()) {
+		                                itEnemy.remove();
+		                            }
+		                            itBullet.remove();
+		                            break;
+		                        }
+		                    }
+		                } else {
+		                    itBullet.remove();
+		                }
+		            }
+		            gamePanel.repaint();
+		            Thread.sleep(delay);
+		            Move();
+		        }
+		    } catch (InterruptedException e) {
+		        e.printStackTrace();
+		    }
 		}
+	}
+	
+	public boolean isCollision(Enemy enemy, Bullet bullet) {
+		return enemy.getBounds().intersects(bullet.getBounds());
 	}
 
 	public void Move() {

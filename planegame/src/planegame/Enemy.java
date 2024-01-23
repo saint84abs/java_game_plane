@@ -13,6 +13,8 @@ public class Enemy {
 	private int x, y;
 	// 적 객체의 속도 
 	private int speed = 1;
+	// 적 개체의 hp, sp
+	private int HP, SP;
 
 	public Enemy(int x, int y, int speed, String ImagePath) {
 		this.x = x;
@@ -21,12 +23,32 @@ public class Enemy {
 		this.image = new ImageIcon(ImagePath).getImage();
 	}
 	
+	public Enemy(int x, int y, int speed, String ImagePath, int HP, int SP) {
+		this.x = x;
+		this.y = y;
+		this.speed = speed;
+		this.image = new ImageIcon(ImagePath).getImage();
+		this.HP = HP;
+		this.SP = SP;
+	}
+	
 	public void move() {
 		// 자동적으로 일정 패턴으로 움직여야함
 		if (x <= 200)
 			x += speed;
 		else 
 			x -= speed;
+	}
+	
+	public void hit(Bullet bullet) {
+		this.HP -= bullet.getDamage();
+		if (this.HP == 0) {
+			System.out.println("this object is done!");
+		}
+	}
+	
+	public boolean isDead() {
+		return this.HP <= 0;
 	}
 	
 	public Rectangle getBounds() {
@@ -42,5 +64,9 @@ public class Enemy {
 	}
 	public int getY() {
 		return y;
+	}
+	
+	public int getHP() {
+		return HP;
 	}
 }

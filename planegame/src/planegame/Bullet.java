@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 
 public class Bullet {
 	private Image bullet_Level_1 = new ImageIcon("image/bullet.png").getImage();
-	private int bulletX, bulletY, damage;
+	private int bulletX, bulletY, damage = 2;
 	private int speed = 8;
 	
 	public Bullet(int x, int y, int damage) {
