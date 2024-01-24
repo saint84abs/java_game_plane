@@ -15,13 +15,6 @@ public class Enemy {
 	private int speed = 1;
 	// 적 개체의 hp, sp
 	private int HP, SP;
-
-	public Enemy(int x, int y, int speed, String ImagePath) {
-		this.x = x;
-		this.y = y;
-		this.speed = speed;
-		this.image = new ImageIcon(ImagePath).getImage();
-	}
 	
 	public Enemy(int x, int y, int speed, String ImagePath, int HP, int SP) {
 		this.x = x;
@@ -65,8 +58,10 @@ public class Enemy {
 	public int getY() {
 		return y;
 	}
-	
 	public int getHP() {
 		return HP;
+	}
+	public Image getImage() {
+		return image;
 	}
 }
