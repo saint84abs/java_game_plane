@@ -1,6 +1,8 @@
 package planegame;
 
 import java.awt.Image;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import javax.swing.ImageIcon;
 
@@ -9,10 +11,14 @@ public class LevelDesign {
 	private int x, y;
 	private int speed;
 	private Image image;
+	// 인게임 정보
+	private int score;
 	// 랜덤을 위한 Random객체
 	private static final Random rand = new Random();
 	// 이미지를 위한 객체
 	GamePanel gp = new GamePanel();
+	private List<Enemy> enemies = new ArrayList<Enemy>();
+	private List<Enemy> enemiesToRemove = new ArrayList<Enemy>();
 	public LevelDesign() {
 		
 	}
@@ -25,4 +31,8 @@ public class LevelDesign {
 		
 		speed = rand.nextInt(3) + 1;
 	}
+	
+	
+	
+	
 }

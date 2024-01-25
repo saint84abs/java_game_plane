@@ -17,12 +17,13 @@ public class GamePanel extends JPanel {
 	private int EnemyPlaneX = -12, EnemyPlaneY = 10;
 	private int bulletX, bulletY, damage = 5;
 	private boolean isUP, isDOWN, isLEFT, isRIGHT, isSPACE;
+	private int movingCase = 1;
 	// 배경 및 플레이어 캐릭터 이미지 변수
 	private Image backImage = new ImageIcon("image/myBackGround.jpg").getImage();
 	private Image planeImage = new ImageIcon("image/myPlane.png").getImage();
 	// 적 객체용 이미지 변수
-	private Enemy EnemyPlane_BOSS = new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_BOSS.png", 100, 5);
-//	private Enemy EnemyPlane_Normal = new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_Normal.png");
+	private Enemy EnemyPlane_BOSS = new Enemy(EnemyPlaneX, EnemyPlaneY, 2, "image/EnemyPlane_BOSS.png", 30, 5);
+	private Enemy EnemyPlane_Normal = new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_Normal.png", 20, 0);
 	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
 	// 키 이벤트용 변수
 	private List<Bullet> bullets = new ArrayList<Bullet>();
@@ -68,6 +69,7 @@ public class GamePanel extends JPanel {
 		g.drawImage(backBuffer, 0, 0, this);
 		for (Enemy enemy : enemies) {
 			enemy.draw(g);
+//			enemy.move(movingCase);
 		}
 	}
 	
@@ -115,26 +117,28 @@ public class GamePanel extends JPanel {
 		            else 
 		                fireDelay -= 2;
 
+
+		            
+		            if (enemies.isEmpty()) {
+		            	enemies.add(new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_Normal.png", 20, 0));
+		            }
+		            Iterator<Enemy> itEnemy = enemies.iterator();
+		            while (itEnemy.hasNext()) {
+		                Enemy enemy = itEnemy.next();
+		                enemy.move(movingCase);
+		            }		            
+		            
 		            Iterator<Bullet> itBullet = bullets.iterator();
 		            while (itBullet.hasNext()) {
 		                Bullet bullet = itBullet.next();
 
 		                if (bullet.getY() > 0) {
 		                    bullet.move();
-		                    Iterator<Enemy> itEnemy = enemies.iterator();
+		                    itEnemy = enemies.iterator();
 		                    while (itEnemy.hasNext()) {
 		                        Enemy enemy = itEnemy.next();
-//		                        if (isCollision(enemy, bullet)) {
-//		                        	System.out.println(enemy.getHP());
-//		                            enemy.hit(bullet);
-//		                            if (enemy.isDead()) {
-//		                                itEnemy.remove();
-//		                            }
-//		                            itBullet.remove();
-//		                            break;
-//		                        }
 		                        if (isPixelPerfectCollision(toBufferedImage(enemy.getImage()), enemy.getX(), enemy.getY(), toBufferedImage(bullet.getImage()), bullet.getX(), bullet.getY())) {
-		                        	System.out.println(enemy.getHP());
+		                            System.out.println(enemy.getHP());
 		                            enemy.hit(bullet);
 		                            if (enemy.isDead()) {
 		                                itEnemy.remove();
@@ -147,6 +151,7 @@ public class GamePanel extends JPanel {
 		                    itBullet.remove();
 		                }
 		            }
+		            
 		            gamePanel.repaint();
 		            Thread.sleep(delay);
 		            Move();
@@ -155,6 +160,7 @@ public class GamePanel extends JPanel {
 		        e.printStackTrace();
 		    }
 		}
+
 	}
 	
 	public boolean isCollision(Enemy enemy, Bullet bullet) {
@@ -191,7 +197,6 @@ public class GamePanel extends JPanel {
 	            }
 	        }
 	    }
-
 	    // 충돌이 없음
 	    return false;
 	}

@@ -3,7 +3,11 @@ package planegame;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.*;
 
+import javax.swing.*;
 import javax.swing.ImageIcon;
 
 public class Enemy {
@@ -25,17 +29,35 @@ public class Enemy {
 		this.SP = SP;
 	}
 	
-	public void move() {
-		// 자동적으로 일정 패턴으로 움직여야함
-		if (x <= 200)
-			x += speed;
-		else 
-			x -= speed;
+	public void move(int movingCase) {
+		int delay = 100; // milliseconds
+		ActionListener taskPerformer = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				switch(movingCase) {
+				case 1:
+					x = 0;
+					y = 0;
+					x += speed;
+					y -= speed;
+					break;
+				case 2:
+					x = 450;
+					y = 0;
+					x -= speed;
+					y -= speed;
+					break;
+				case 3:
+					break;
+				}
+			}
+		};
+		new Timer(delay, taskPerformer).start();
 	}
 	
 	public void hit(Bullet bullet) {
 		this.HP -= bullet.getDamage();
-		if (this.HP == 0) {
+		if (this.HP <= 0) {
 			System.out.println("this object is done!");
 		}
 	}
