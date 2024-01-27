@@ -66,11 +66,8 @@ public class GamePanel extends JPanel {
 		g2d.drawImage(backImage, 0, 0, this);
 		DrawPlane(g);
 		DrawBullet(g);
+		DrawEnemy(g);
 		g.drawImage(backBuffer, 0, 0, this);
-		for (Enemy enemy : enemies) {
-			enemy.draw(g);
-//			enemy.move(movingCase);
-		}
 	}
 	
 	private void DrawPlane(Graphics g) {
@@ -83,6 +80,17 @@ public class GamePanel extends JPanel {
 				g2d.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
 			}
 		}
+	}
+	private void DrawEnemy(Graphics g) {
+        for (int i = 0; i < enemies.size(); i++) {
+        	Enemy enemy = enemies.get(i);
+        	g2d.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), this);
+        	enemy.move(movingCase);
+        	if (enemy.isDead()) {
+        		enemies.remove(i);
+        		i--;
+        	}
+        }
 	}
 	// 메인 화면 갱신 루프, 이동과 상호작용을 담당함
 	public class GameLoop implements Runnable, ActionListener {
@@ -112,21 +120,16 @@ public class GamePanel extends JPanel {
 		        while (inGame) {
 		            if (fireDelay <= 0) {
 		                bullets.add(new Bullet(planeX, planeY, damage));
-		                fireDelay = 100;
+		                fireDelay = 50;
 		            }
 		            else 
 		                fireDelay -= 2;
 
-
-		            
 		            if (enemies.isEmpty()) {
 		            	enemies.add(new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_Normal.png", 20, 0));
 		            }
 		            Iterator<Enemy> itEnemy = enemies.iterator();
-		            while (itEnemy.hasNext()) {
-		                Enemy enemy = itEnemy.next();
-		                enemy.move(movingCase);
-		            }		            
+
 		            
 		            Iterator<Bullet> itBullet = bullets.iterator();
 		            while (itBullet.hasNext()) {

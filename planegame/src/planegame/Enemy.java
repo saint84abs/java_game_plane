@@ -14,7 +14,7 @@ public class Enemy {
 	// 적 객체의 이미지
 	private Image image;
 	// 적 객체의 위치
-	private int x, y;
+	private int x = 0, y = 0;
 	// 적 객체의 속도 
 	private int speed = 1;
 	// 적 개체의 hp, sp
@@ -36,16 +36,18 @@ public class Enemy {
 			public void actionPerformed(ActionEvent e) {
 				switch(movingCase) {
 				case 1:
-					x = 0;
-					y = 0;
+
 					x += speed;
-					y -= speed;
+					y += speed;
+					if (x > 250) 
+						x = 250;
+					if (y > 400)
+						y = 400;
+					
 					break;
 				case 2:
-					x = 450;
-					y = 0;
 					x -= speed;
-					y -= speed;
+					y += speed;
 					break;
 				case 3:
 					break;
