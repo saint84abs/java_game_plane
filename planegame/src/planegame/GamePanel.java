@@ -16,7 +16,6 @@ public class GamePanel extends JPanel {
 	private int planeX = 200, planeY = 720;
 	private int EnemyPlaneX = -12, EnemyPlaneY = 10;
 	private int bulletX, bulletY, damage = 5;
-	private boolean isUP, isDOWN, isLEFT, isRIGHT, isSPACE;
 	private int movingCase = 1;
 	// 배경 및 플레이어 캐릭터 이미지 변수
 	private Image backImage = new ImageIcon("image/myBackGround.jpg").getImage();
@@ -36,13 +35,18 @@ public class GamePanel extends JPanel {
 	private int FPS = 75;
 	private int fireDelay = 100;
 	
+	private Controller MyCon = new Controller();
+	private Player player = new Player();
+	
+	
+	
 	public GamePanel() {
 		initGamePanel();
 	}
 	
 	private void initGamePanel() {
 		setFocusable(true);
-		addKeyListener(new MyKeyListner());
+		addKeyListener(MyCon.new MyKeyListner());
 		setVisible(true);
 		
 		JPanel gamePanel = new JPanel();
@@ -64,15 +68,16 @@ public class GamePanel extends JPanel {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g2d.drawImage(backImage, 0, 0, this);
-		DrawPlane(g);
 		DrawBullet(g);
 		DrawEnemy(g);
 		g.drawImage(backBuffer, 0, 0, this);
+		Graphics2D g2d = (Graphics2D) g;
+		player.DrawPlane(g2d, this);
 	}
 	
-	private void DrawPlane(Graphics g) {
-		g2d.drawImage(planeImage, planeX, planeY, this);
-	}
+//	private void DrawPlane(Graphics g) {
+//		g2d.drawImage(planeImage, planeX, planeY, this);
+//	}
 	
 	private void DrawBullet(Graphics g) {
 		for (Bullet bullet : bullets) {
@@ -110,7 +115,7 @@ public class GamePanel extends JPanel {
 			this.gamePanel = gamePanel;
 			this.delay = delay;
 			initVariables(FPS);
-			gamePanel.addKeyListener(new MyKeyListner());
+			gamePanel.addKeyListener(MyCon.new MyKeyListner());
 			gamePanel.setFocusable(true);
 		}
 		
@@ -205,25 +210,25 @@ public class GamePanel extends JPanel {
 	}
 
 	public void Move() {
-		if (isLEFT) {
+		if (MyCon.getIsLeft()) {
 			if (planeX <= 0) 
 				planeX = 0;
 			else 
 				planeX -= 2;
 		}
-		if (isRIGHT) {
+		if (MyCon.getIsRight()) {
 			if (planeX < background.getIconWidth() - planeImage.getWidth(this))
 				planeX += 2;
 			else
 				planeX = background.getIconWidth() - planeImage.getWidth(this);
 		}
-		if (isUP) {
+		if (MyCon.getIsUp()) {
 			if (planeY > 450)
 				planeY -= 1;
 			else 
 				planeY = 450;
 		}
-		if (isDOWN) {
+		if (MyCon.getIsDown()) {
 			if (planeY >= background.getIconHeight() - planeImage.getHeight(this))
 				planeY = background.getIconHeight() - planeImage.getHeight(this);
 			else 
@@ -231,59 +236,59 @@ public class GamePanel extends JPanel {
 		}
 	}
 
-	class MyKeyListner implements KeyListener {
-		@Override
-		public void keyTyped(KeyEvent e) {
-			switch (e.getKeyCode()) {
-			case KeyEvent.VK_S:
-				if (inGame == true)
-					inGame = true;
-				else 
-					inGame = false;
-			}
-		}
-		@Override
-		public void keyPressed(KeyEvent e) {
-			switch (e.getKeyCode()) {
-			case KeyEvent.VK_LEFT:
-				isLEFT = true;
-				break;
-			case KeyEvent.VK_RIGHT:
-				isRIGHT = true;
-				break;
-			case KeyEvent.VK_UP:
-				isUP = true;
-				break;
-			case KeyEvent.VK_DOWN:
-				isDOWN = true;
-				break;
-			case KeyEvent.VK_SPACE:
-				isSPACE = true;
-				break;
-			}
-		}
-
-		@Override
-		public void keyReleased(KeyEvent e) {
-			switch (e.getKeyCode()) {
-			case KeyEvent.VK_LEFT:
-				isLEFT = false;
-				break;
-			case KeyEvent.VK_RIGHT:
-				isRIGHT = false;
-				break;
-			case KeyEvent.VK_UP:
-				isUP = false;
-				break;
-			case KeyEvent.VK_DOWN:
-				isDOWN = false;
-				break;
-			case KeyEvent.VK_SPACE:
-				isSPACE = false;
-				break;
-			}
-		}
-	}
+//	class MyKeyListner implements KeyListener {
+//		@Override
+//		public void keyTyped(KeyEvent e) {
+//			switch (e.getKeyCode()) {
+//			case KeyEvent.VK_S:
+//				if (inGame == true)
+//					inGame = true;
+//				else 
+//					inGame = false;
+//			}
+//		}
+//		@Override
+//		public void keyPressed(KeyEvent e) {
+//			switch (e.getKeyCode()) {
+//			case KeyEvent.VK_LEFT:
+//				isLEFT = true;
+//				break;
+//			case KeyEvent.VK_RIGHT:
+//				isRIGHT = true;
+//				break;
+//			case KeyEvent.VK_UP:
+//				isUP = true;
+//				break;
+//			case KeyEvent.VK_DOWN:
+//				isDOWN = true;
+//				break;
+//			case KeyEvent.VK_SPACE:
+//				isSPACE = true;
+//				break;
+//			}
+//		}
+//
+//		@Override
+//		public void keyReleased(KeyEvent e) {
+//			switch (e.getKeyCode()) {
+//			case KeyEvent.VK_LEFT:
+//				isLEFT = false;
+//				break;
+//			case KeyEvent.VK_RIGHT:
+//				isRIGHT = false;
+//				break;
+//			case KeyEvent.VK_UP:
+//				isUP = false;
+//				break;
+//			case KeyEvent.VK_DOWN:
+//				isDOWN = false;
+//				break;
+//			case KeyEvent.VK_SPACE:
+//				isSPACE = false;
+//				break;
+//			}
+//		}
+//	}
 	
 	public BufferedImage toBufferedImage(Image img) {
 	    if (img instanceof BufferedImage) {
