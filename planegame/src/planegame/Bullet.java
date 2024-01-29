@@ -13,6 +13,10 @@ public class Bullet {
 	private int bulletX, bulletY, damage = 2;
 	private int speed = 8;
 	
+	public Bullet() {
+		
+	}
+	
 	public Bullet(int x, int y, int damage) {
 		this.bulletX = x;
 		this.bulletY = y;

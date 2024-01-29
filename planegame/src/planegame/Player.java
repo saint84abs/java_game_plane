@@ -7,21 +7,30 @@ import java.awt.image.ImageObserver;
 
 import javax.swing.ImageIcon;
 
-public class Player implements Movable {
+
+public class Player implements Movable, ImageObserver {
 	// 객체 위치 전용 변수
-	private int planeX, planeY;
+	private int planeX = 200, planeY = 700;
 	private Controller con = new Controller();
 	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
 	private Image planeImage = new ImageIcon("image/myPlane.png").getImage();
-
 	
 	public Player() {
-		planeX = 200;
-		planeY = 700;
+		
 	}
 	
-	public void DrawPlane(Graphics2D g, ImageObserver IO) {
-		g.drawImage(planeImage, planeX, planeY, IO);
+	public Player(Controller con) {
+		this.con = con;
+	}
+
+    @Override
+    public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+        // ImageObserver 인터페이스를 구현하는 코드
+        return false;
+    }
+
+	public void DrawPlane(Graphics2D g2d, ImageObserver IO) {
+		g2d.drawImage(planeImage, planeX, planeY, IO);
 	}
 	
 	@Override

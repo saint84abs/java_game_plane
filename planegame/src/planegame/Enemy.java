@@ -20,6 +20,10 @@ public class Enemy {
 	// 적 개체의 hp, sp
 	private int HP, SP;
 	
+	public Enemy() {
+		
+	}
+	
 	public Enemy(int x, int y, int speed, String ImagePath, int HP, int SP) {
 		this.x = x;
 		this.y = y;

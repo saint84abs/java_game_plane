@@ -3,6 +3,7 @@ package planegame;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,9 +37,7 @@ public class GamePanel extends JPanel {
 	private int fireDelay = 100;
 	
 	private Controller MyCon = new Controller();
-	private Player player = new Player();
-	
-	
+	private Player player = new Player(MyCon);
 	
 	public GamePanel() {
 		initGamePanel();
@@ -46,7 +45,7 @@ public class GamePanel extends JPanel {
 	
 	private void initGamePanel() {
 		setFocusable(true);
-		addKeyListener(MyCon.new MyKeyListner());
+		addKeyListener(MyCon);
 		setVisible(true);
 		
 		JPanel gamePanel = new JPanel();
@@ -66,17 +65,16 @@ public class GamePanel extends JPanel {
 	
 	@Override 
 	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		g2d.drawImage(backImage, 0, 0, this);
-		DrawBullet(g);
-		DrawEnemy(g);
-		g.drawImage(backBuffer, 0, 0, this);
-		Graphics2D g2d = (Graphics2D) g;
-		player.DrawPlane(g2d, this);
+	    super.paintComponent(g);
+	    g2d.drawImage(backImage, 0, 0, this);
+	    DrawBullet(g);
+	    DrawEnemy(g);
+	    player.DrawPlane(g2d, this);
+	    g.drawImage(backBuffer, 0, 0, this);
 	}
-	
-//	private void DrawPlane(Graphics g) {
-//		g2d.drawImage(planeImage, planeX, planeY, this);
+
+//	public void DrawPlane(Graphics2D g2d, ImageObserver IO) {
+//		g2d.drawImage(planeImage, planeX, planeY, IO);
 //	}
 	
 	private void DrawBullet(Graphics g) {
@@ -115,7 +113,7 @@ public class GamePanel extends JPanel {
 			this.gamePanel = gamePanel;
 			this.delay = delay;
 			initVariables(FPS);
-			gamePanel.addKeyListener(MyCon.new MyKeyListner());
+			gamePanel.addKeyListener(MyCon);
 			gamePanel.setFocusable(true);
 		}
 		
@@ -162,7 +160,7 @@ public class GamePanel extends JPanel {
 		            
 		            gamePanel.repaint();
 		            Thread.sleep(delay);
-		            Move();
+		            player.move();
 		        }
 		    } catch (InterruptedException e) {
 		        e.printStackTrace();
