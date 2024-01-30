@@ -19,17 +19,21 @@ public class GameLoop implements Runnable, ActionListener {
 	private int FPS = 75;
 	private int fireDelay = 100;
 	private int EnemyPlaneX = -12, EnemyPlaneY = 10;
-	private int bulletX, bulletY, damage = 5;
+	private int damage = 5;
+	
+	GameView gameView = new GameView();
 	
 	private Controller MyCon = new Controller();
 	private Player player = new Player(MyCon);
+	private Bullet bullet = new Bullet();
+	private Enemy enemy = new Enemy();
 	
-	private List<Player> players = new ArrayList<>();
 	private List<Enemy> enemies = new ArrayList<>();
 	private List<Bullet> bullets = new ArrayList<>();
 	
 	private JPanel gamePanel;
 	private int delay;
+	
 	private void initVariables(int fps) {
 		timer = new Timer(1000 / fps, this);
 		timer.start();
@@ -52,13 +56,14 @@ public class GameLoop implements Runnable, ActionListener {
 	public void run() {
 	    try {
 	        while (inGame) {
-	            if (fireDelay <= 0) {
-	                bullets.add(new Bullet(player.getX(), player.getY(), damage));
-	                fireDelay = 50;
-	            }
-	            else 
-	                fireDelay -= 2;
-
+//	            if (fireDelay <= 0) {
+//	                bullets.add(new Bullet(player.getX(), player.getY(), damage));
+//	                fireDelay = 50;
+//	            }
+//	            else 
+//	                fireDelay -= 2;
+	        	gameView.Fire(fireDelay);
+	        	
 	            if (enemies.isEmpty()) {
 	            	enemies.add(new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_Normal.png", 20, 0));
 	            }
@@ -97,11 +102,7 @@ public class GameLoop implements Runnable, ActionListener {
 	        e.printStackTrace();
 	    }
 	}
-	
-	public boolean isCollision(Enemy enemy, Bullet bullet) {
-		return enemy.getBounds().intersects(bullet.getBounds());
-	}
-	
+
 	public boolean isPixelPerfectCollision(BufferedImage image1, int x1, int y1, BufferedImage image2, int x2, int y2) {
 	    // 이미지의 너비와 높이
 	    int width1 = image1.getWidth(null);

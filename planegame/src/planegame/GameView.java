@@ -27,7 +27,11 @@ public class GameView extends JPanel {
         this.setBounds(0, 0, backBuffer.getWidth(), backBuffer.getHeight());
     }
 
-    @Override 
+    public GameView() {
+
+	}
+
+	@Override 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g2d.drawImage(backImage, 0, 0, this);
@@ -49,5 +53,14 @@ public class GameView extends JPanel {
         for (Enemy enemy : enemies) {
             g2d.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), this);
         }
+    }
+    
+    public void Fire(int fireDelay) {
+        if (fireDelay <= 0) {
+            bullets.add(new Bullet(player.getX(), player.getY(), 5));
+            fireDelay = 50;
+        }
+        else 
+            fireDelay -= 2;
     }
 }
