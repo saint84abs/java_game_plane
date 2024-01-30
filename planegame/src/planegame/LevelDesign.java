@@ -23,14 +23,14 @@ public class LevelDesign {
 		
 	}
 	
-	public void EnemyIncounter(Enemy enemy, String ImagePath) {
-		image = new ImageIcon(ImagePath).getImage();
-		
-		x = rand.nextInt(gp.getBackImageIcon().getIconWidth() - image.getWidth(null));
-		y = 0;
-		
-		speed = rand.nextInt(3) + 1;
-	}
+//	public void EnemyIncounter(Enemy enemy, String ImagePath) {
+//		image = new ImageIcon(ImagePath).getImage();
+//		
+//		x = rand.nextInt(gp.getBackImageIcon().getIconWidth() - image.getWidth(null));
+//		y = 0;
+//		
+//		speed = rand.nextInt(3) + 1;
+//	}
 	
 	
 	

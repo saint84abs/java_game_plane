@@ -29,7 +29,7 @@ public class Player implements Movable, ImageObserver {
         return false;
     }
 
-	public void DrawPlane(Graphics2D g2d, ImageObserver IO) {
+	public void drawPlane(Graphics2D g2d, ImageObserver IO) {
 		g2d.drawImage(planeImage, planeX, planeY, IO);
 	}
 	
@@ -61,4 +61,16 @@ public class Player implements Movable, ImageObserver {
 				planeY += 1;
 		}
 	}
+	
+	
+	public int getX() {
+		return planeX;
+	}
+	public int getY() {
+		return planeY;
+	}
+	public Image getImage() {
+		return planeImage;
+	}
+	
 }

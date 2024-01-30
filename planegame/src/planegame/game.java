@@ -18,7 +18,19 @@ public class game extends JFrame {
 	}
 	
 	public static void main(String args[]) {
-		game g = new game("1944");
+        GamePanel gamePanel = new GamePanel();
+
+        // Set up the game window
+        JFrame frame = new JFrame("Game Title");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(gamePanel);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        // Start the game loop
+        gamePanel.startGame();
+//		game g = new game("1944");
 	}
 }
 

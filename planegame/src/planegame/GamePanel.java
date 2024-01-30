@@ -10,6 +10,46 @@ import java.util.List;
 import javax.swing.*;
 
 public class GamePanel extends JPanel {
+    private Player player;
+    private List<Enemy> enemies;
+    private List<Bullet> bullets;
+    private BufferedImage backBuffer;
+    private Graphics2D g2d;
+    private Image backImage;
+    private GameView gameView;
+    private GameLoop gameLoop;
+    private GameController gameController;
+    
+    public GamePanel() {
+        // Create the game's objects
+        player = new Player();
+        enemies = new ArrayList<>();
+        bullets = new ArrayList<>();
+
+        // Create the backBuffer and Graphics2D object
+        backBuffer = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
+        g2d = backBuffer.createGraphics();
+
+        // Create the model, view, and controller
+        gameView = new GameView(player, enemies, bullets, backBuffer, g2d, backImage);
+        gameLoop = new GameLoop(gameView, 1000 / 60);  // Assuming 60 FPS
+        gameController = new GameController(gameView, gameLoop);
+        
+        // Set up the game window
+        setFocusable(true);
+        setVisible(true);
+        this.setBounds(0, 0, backBuffer.getWidth(), backBuffer.getHeight());
+        this.add(gameView);
+    }
+    
+    public void startGame() {
+        gameController.start();
+    }
+}
+
+
+/*
+ * public class GamePanel extends JPanel {
 	// double buffering용 변수
 	private BufferedImage backBuffer;
 	private Graphics2D g2d;
@@ -62,150 +102,7 @@ public class GamePanel extends JPanel {
 		g2d = backBuffer.createGraphics();
 		g2d.drawImage(backImage, 0, 0, this);
 	}
-	
-	@Override 
-	protected void paintComponent(Graphics g) {
-	    super.paintComponent(g);
-	    g2d.drawImage(backImage, 0, 0, this);
-	    DrawBullet(g);
-	    DrawEnemy(g);
-	    player.DrawPlane(g2d, this);
-	    g.drawImage(backBuffer, 0, 0, this);
-	}
 
-//	public void DrawPlane(Graphics2D g2d, ImageObserver IO) {
-//		g2d.drawImage(planeImage, planeX, planeY, IO);
-//	}
-	
-	private void DrawBullet(Graphics g) {
-		for (Bullet bullet : bullets) {
-			if (bullet.getY() > 0) {
-				g2d.drawImage(bullet.getImage(), bullet.getX(), bullet.getY(), this);
-			}
-		}
-	}
-	private void DrawEnemy(Graphics g) {
-        for (int i = 0; i < enemies.size(); i++) {
-        	Enemy enemy = enemies.get(i);
-        	g2d.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), this);
-        	enemy.move(movingCase);
-        	if (enemy.isDead()) {
-        		enemies.remove(i);
-        		i--;
-        	}
-        }
-	}
-	// 메인 화면 갱신 루프, 이동과 상호작용을 담당함
-	public class GameLoop implements Runnable, ActionListener {
-		private JPanel gamePanel;
-		private int delay;
-		private void initVariables(int fps) {
-			timer = new Timer(1000 / fps, this);
-			timer.start();
-		}
-		
-		@Override 
-		public void actionPerformed(ActionEvent e) {
-			gamePanel.repaint();
-		}
-		
-		public GameLoop(JPanel gamePanel, int delay) {
-			this.gamePanel = gamePanel;
-			this.delay = delay;
-			initVariables(FPS);
-			gamePanel.addKeyListener(MyCon);
-			gamePanel.setFocusable(true);
-		}
-		
-		@Override
-		public void run() {
-		    try {
-		        while (inGame) {
-		            if (fireDelay <= 0) {
-		                bullets.add(new Bullet(planeX, planeY, damage));
-		                fireDelay = 50;
-		            }
-		            else 
-		                fireDelay -= 2;
-
-		            if (enemies.isEmpty()) {
-		            	enemies.add(new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_Normal.png", 20, 0));
-		            }
-		            Iterator<Enemy> itEnemy = enemies.iterator();
-
-		            
-		            Iterator<Bullet> itBullet = bullets.iterator();
-		            while (itBullet.hasNext()) {
-		                Bullet bullet = itBullet.next();
-
-		                if (bullet.getY() > 0) {
-		                    bullet.move();
-		                    itEnemy = enemies.iterator();
-		                    while (itEnemy.hasNext()) {
-		                        Enemy enemy = itEnemy.next();
-		                        if (isPixelPerfectCollision(toBufferedImage(enemy.getImage()), enemy.getX(), enemy.getY(), toBufferedImage(bullet.getImage()), bullet.getX(), bullet.getY())) {
-		                            System.out.println(enemy.getHP());
-		                            enemy.hit(bullet);
-		                            if (enemy.isDead()) {
-		                                itEnemy.remove();
-		                            }
-		                            itBullet.remove();
-		                            break;
-		                        }
-		                    }
-		                } else {
-		                    itBullet.remove();
-		                }
-		            }
-		            
-		            gamePanel.repaint();
-		            Thread.sleep(delay);
-		            player.move();
-		        }
-		    } catch (InterruptedException e) {
-		        e.printStackTrace();
-		    }
-		}
-
-	}
-	
-	public boolean isCollision(Enemy enemy, Bullet bullet) {
-		return enemy.getBounds().intersects(bullet.getBounds());
-	}
-	
-	public boolean isPixelPerfectCollision(BufferedImage image1, int x1, int y1, BufferedImage image2, int x2, int y2) {
-	    // 이미지의 너비와 높이
-	    int width1 = image1.getWidth(null);
-	    int height1 = image1.getHeight(null);
-	    int width2 = image2.getWidth(null);
-	    int height2 = image2.getHeight(null);
-
-	    // 이미지의 픽셀 단위로 충돌 검출
-	    for (int i = 0; i < width1; i++) {
-	        for (int j = 0; j < height1; j++) {
-	            // 첫 번째 이미지의 픽셀이 투명한지 확인
-	            int pixel1 = image1.getRGB(i, j);
-	            if ((pixel1 >> 24) == 0x00) {
-	                continue; // 투명한 픽셀은 무시
-	            }
-
-	            // 두 번째 이미지의 해당 위치에 픽셀이 있는지 확인
-	            int i2 = i + x1 - x2;
-	            int j2 = j + y1 - y2;
-	            if (i2 < 0 || i2 >= width2 || j2 < 0 || j2 >= height2) {
-	                continue; // 첫 번째 이미지의 픽셀이 두 번째 이미지의 범위를 벗어나는 경우 무시
-	            }
-
-	            // 두 번째 이미지의 픽셀이 투명한지 확인
-	            int pixel2 = image2.getRGB(i2, j2);
-	            if ((pixel2 >> 24) != 0x00) {
-	                return true; // 두 이미지의 픽셀이 모두 투명하지 않으면 충돌 발생
-	            }
-	        }
-	    }
-	    // 충돌이 없음
-	    return false;
-	}
 
 	public void Move() {
 		if (MyCon.getIsLeft()) {
@@ -234,84 +131,9 @@ public class GamePanel extends JPanel {
 		}
 	}
 
-//	class MyKeyListner implements KeyListener {
-//		@Override
-//		public void keyTyped(KeyEvent e) {
-//			switch (e.getKeyCode()) {
-//			case KeyEvent.VK_S:
-//				if (inGame == true)
-//					inGame = true;
-//				else 
-//					inGame = false;
-//			}
-//		}
-//		@Override
-//		public void keyPressed(KeyEvent e) {
-//			switch (e.getKeyCode()) {
-//			case KeyEvent.VK_LEFT:
-//				isLEFT = true;
-//				break;
-//			case KeyEvent.VK_RIGHT:
-//				isRIGHT = true;
-//				break;
-//			case KeyEvent.VK_UP:
-//				isUP = true;
-//				break;
-//			case KeyEvent.VK_DOWN:
-//				isDOWN = true;
-//				break;
-//			case KeyEvent.VK_SPACE:
-//				isSPACE = true;
-//				break;
-//			}
-//		}
-//
-//		@Override
-//		public void keyReleased(KeyEvent e) {
-//			switch (e.getKeyCode()) {
-//			case KeyEvent.VK_LEFT:
-//				isLEFT = false;
-//				break;
-//			case KeyEvent.VK_RIGHT:
-//				isRIGHT = false;
-//				break;
-//			case KeyEvent.VK_UP:
-//				isUP = false;
-//				break;
-//			case KeyEvent.VK_DOWN:
-//				isDOWN = false;
-//				break;
-//			case KeyEvent.VK_SPACE:
-//				isSPACE = false;
-//				break;
-//			}
-//		}
-//	}
-	
-	public BufferedImage toBufferedImage(Image img) {
-	    if (img instanceof BufferedImage) {
-	        return (BufferedImage) img;
-	    }
-
-	    // Create a buffered image with transparency
-	    BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-
-	    // Draw the image on to the buffered image
-	    Graphics2D bGr = bimage.createGraphics();
-	    bGr.drawImage(img, 0, 0, null);
-	    bGr.dispose();
-
-	    // Return the buffered image
-	    return bimage;
-	}
-	
-	
 	public ImageIcon getBackImageIcon() {
 		return background;
 		
 	}
 }
-
-/*
- * 
  * */
