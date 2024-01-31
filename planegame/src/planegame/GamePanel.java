@@ -15,10 +15,11 @@ public class GamePanel extends JPanel {
     private List<Bullet> bullets;
     private BufferedImage backBuffer;
     private Graphics2D g2d;
-    private Image backImage;
+    private GameModel gameModel = new GameModel();
     private GameView gameView;
     private GameLoop gameLoop;
     private GameController gameController;
+    private Image backImage = gameModel.getBackGround();
     
     public GamePanel() {
         // Create the game's objects
@@ -31,7 +32,7 @@ public class GamePanel extends JPanel {
         g2d = backBuffer.createGraphics();
 
         // Create the model, view, and controller
-        gameView = new GameView(player, enemies, bullets, backBuffer, g2d, backImage);
+        gameView = new GameView(player, enemies, bullets, backBuffer, backImage);
         gameLoop = new GameLoop(gameView, 1000 / 60);  // Assuming 60 FPS
         gameController = new GameController(gameView, gameLoop);
         

@@ -21,12 +21,12 @@ public class GameLoop implements Runnable, ActionListener {
 	private int EnemyPlaneX = -12, EnemyPlaneY = 10;
 	private int damage = 5;
 	
-	GameView gameView = new GameView();
-	
 	private Controller MyCon = new Controller();
 	private Player player = new Player(MyCon);
 	private Bullet bullet = new Bullet();
 	private Enemy enemy = new Enemy();
+
+	GameView gameView = new GameView();
 	
 	private List<Enemy> enemies = new ArrayList<>();
 	private List<Bullet> bullets = new ArrayList<>();
@@ -62,37 +62,37 @@ public class GameLoop implements Runnable, ActionListener {
 //	            }
 //	            else 
 //	                fireDelay -= 2;
-	        	gameView.Fire(fireDelay);
-	        	
-	            if (enemies.isEmpty()) {
-	            	enemies.add(new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_Normal.png", 20, 0));
-	            }
-	            Iterator<Enemy> itEnemy = enemies.iterator();
-
-	            
-	            Iterator<Bullet> itBullet = bullets.iterator();
-	            while (itBullet.hasNext()) {
-	                Bullet bullet = itBullet.next();
-
-	                if (bullet.getY() > 0) {
-	                    bullet.move();
-	                    itEnemy = enemies.iterator();
-	                    while (itEnemy.hasNext()) {
-	                        Enemy enemy = itEnemy.next();
-	                        if (isPixelPerfectCollision(toBufferedImage(enemy.getImage()), enemy.getX(), enemy.getY(), toBufferedImage(bullet.getImage()), bullet.getX(), bullet.getY())) {
-	                            System.out.println(enemy.getHP());
-	                            enemy.hit(bullet);
-	                            if (enemy.isDead()) {
-	                                itEnemy.remove();
-	                            }
-	                            itBullet.remove();
-	                            break;
-	                        }
-	                    }
-	                } else {
-	                    itBullet.remove();
-	                }
-	            }
+//	        	gameView.Fire();
+//	        	
+//	            if (enemies.isEmpty()) {
+//	            	enemies.add(new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_Normal.png", 20, 0));
+//	            }
+//	            Iterator<Enemy> itEnemy = enemies.iterator();
+//
+//	            
+//	            Iterator<Bullet> itBullet = bullets.iterator();
+//	            while (itBullet.hasNext()) {
+//	                Bullet bullet = itBullet.next();
+//
+//	                if (bullet.getY() > 0) {
+//	                    bullet.move();
+//	                    itEnemy = enemies.iterator();
+//	                    while (itEnemy.hasNext()) {
+//	                        Enemy enemy = itEnemy.next();
+//	                        if (isPixelPerfectCollision(toBufferedImage(enemy.getImage()), enemy.getX(), enemy.getY(), toBufferedImage(bullet.getImage()), bullet.getX(), bullet.getY())) {
+//	                            System.out.println(enemy.getHP());
+//	                            enemy.hit(bullet);
+//	                            if (enemy.isDead()) {
+//	                                itEnemy.remove();
+//	                            }
+//	                            itBullet.remove();
+//	                            break;
+//	                        }
+//	                    }
+//	                } else {
+//	                    itBullet.remove();
+//	                }
+//	            }
 	            
 	            gamePanel.repaint();
 	            Thread.sleep(delay);

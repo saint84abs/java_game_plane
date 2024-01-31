@@ -7,33 +7,37 @@ import javax.swing.*;
 
 public class GameView extends JPanel {
     private Player player;
+    private GameModel gameModel;
     private List<Enemy> enemies;
     private List<Bullet> bullets;
     private BufferedImage backBuffer;
     private Graphics2D g2d;
     private Image backImage;
+    private int fireDelay = 50;
 
-    public GameView(Player player, List<Enemy> enemies, List<Bullet> bullets, BufferedImage backBuffer, Graphics2D g2d, Image backImage) {
+    public GameView() {
+    	player = new Player();
+    	
+    }
+    
+    public GameView(Player player, List<Enemy> enemies, List<Bullet> bullets, BufferedImage backBuffer, Image backImage) {
         this.player = player;
         this.enemies = enemies;
         this.bullets = bullets;
         this.backBuffer = backBuffer;
-        this.g2d = g2d;
+        this.gameModel = new GameModel();
         this.backImage = backImage;
-        
+
         setFocusable(true);
         setVisible(true);
-        
+
         this.setBounds(0, 0, backBuffer.getWidth(), backBuffer.getHeight());
     }
 
-    public GameView() {
-
-	}
-
-	@Override 
+    @Override 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        g2d = (Graphics2D) g;
         g2d.drawImage(backImage, 0, 0, this);
         drawBullets(g);
         drawEnemies(g);
@@ -54,8 +58,8 @@ public class GameView extends JPanel {
             g2d.drawImage(enemy.getImage(), enemy.getX(), enemy.getY(), this);
         }
     }
-    
-    public void Fire(int fireDelay) {
+
+    public void Fire() {
         if (fireDelay <= 0) {
             bullets.add(new Bullet(player.getX(), player.getY(), 5));
             fireDelay = 50;

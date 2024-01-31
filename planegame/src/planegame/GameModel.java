@@ -4,6 +4,8 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+
 public class GameModel {
 	private Player player = new Player();
 	private Enemy enemy = new Enemy();
@@ -12,6 +14,7 @@ public class GameModel {
 	private Image playerImage = player.getImage();
 	private Image enemyImage = enemy.getImage();
 	private Image bulletImage = bullet.getImage();
+	private Image backImage = new ImageIcon("image/myBackGround.jpg").getImage();
 	
 	private List<Player> players = new ArrayList<>();
 	private List<Enemy> enemies = new ArrayList<>();
@@ -38,5 +41,9 @@ public class GameModel {
     }
     public List<Bullet> getBullets() {
         return bullets;
+    }
+    public Image getBackGround() {
+    	System.out.println("called background");
+    	return backImage;
     }
 }
