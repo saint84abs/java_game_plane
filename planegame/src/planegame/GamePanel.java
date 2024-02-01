@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.swing.*;
 
-public class GamePanel extends JPanel {
+public class GamePanel extends JFrame {
     private Player player;
     private List<Enemy> enemies;
     private List<Bullet> bullets;
@@ -20,7 +20,7 @@ public class GamePanel extends JPanel {
     private GameLoop gameLoop;
     private GameController gameController;
     private Image backImage = gameModel.getBackGround();
-    
+	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
     public GamePanel() {
         // Create the game's objects
         player = new Player();
@@ -41,6 +41,20 @@ public class GamePanel extends JPanel {
         setVisible(true);
         this.setBounds(0, 0, backBuffer.getWidth(), backBuffer.getHeight());
         this.add(gameView);
+        
+        
+    }
+    
+    public GamePanel(String title) {
+		super(title);
+		GameView gameView = new GameView();
+		setResizable(false);
+		setIgnoreRepaint(true);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setVisible(true);
+		
+		add(gameView);
+		setBounds(300, 100, background.getIconWidth(), background.getIconHeight());
     }
     
     public void startGame() {
