@@ -35,6 +35,7 @@ public class Player implements Movable, ImageObserver {
 	
 	@Override
 	public void move() {
+		System.out.println("move method called");
 		if (con.getIsLeft()) {
 			System.out.println("left");
 			if (planeX <= 0) 

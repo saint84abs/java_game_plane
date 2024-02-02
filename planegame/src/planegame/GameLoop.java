@@ -94,7 +94,7 @@ public class GameLoop implements Runnable, ActionListener {
 //	                }
 //	            }
 	            
-	            gamePanel.repaint();
+//	            gamePanel.repaint();s
 	            Thread.sleep(delay);
 	            player.move();
 	        }

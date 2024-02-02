@@ -19,39 +19,46 @@ public class GamePanel extends JFrame {
     private GameView gameView;
     private GameLoop gameLoop;
     private GameController gameController;
-    private Image backImage = gameModel.getBackGround();
+	private Image backImage = new ImageIcon("image/myBackGround.jpg").getImage();
 	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
     public GamePanel() {
-        // Create the game's objects
-        player = new Player();
-        enemies = new ArrayList<>();
-        bullets = new ArrayList<>();
 
-        // Create the backBuffer and Graphics2D object
-        backBuffer = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
-        g2d = backBuffer.createGraphics();
+        
 
-        // Create the model, view, and controller
-        gameView = new GameView(player, enemies, bullets, backBuffer, backImage);
-        gameLoop = new GameLoop(gameView, 1000 / 60);  // Assuming 60 FPS
-        gameController = new GameController(gameView, gameLoop);
-        
-        // Set up the game window
-        setFocusable(true);
-        setVisible(true);
-        this.setBounds(0, 0, backBuffer.getWidth(), backBuffer.getHeight());
-        this.add(gameView);
-        
+//
+//        // Create the model, view, and controller
+//        gameController = new GameController(gameView, gameLoop);
+//        
+//        // Set up the game window
+//        setFocusable(true);
+//        setVisible(true);
+//        this.setBounds(0, 0, backBuffer.getWidth(), backBuffer.getHeight());
+//        this.add(gameView);
+//        
         
     }
     
     public GamePanel(String title) {
 		super(title);
 		GameView gameView = new GameView();
-		setResizable(false);
+		setResizable(true);
 		setIgnoreRepaint(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
+		
+        // Create the game's objects
+        player = new Player();
+        enemies = new ArrayList<>();
+        bullets = new ArrayList<>();
+        
+        // Create the backBuffer and Graphics2D object
+        backBuffer = new BufferedImage(background.getIconWidth(), background.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+        g2d = backBuffer.createGraphics();
+        
+		gameView = new GameView(player, enemies, bullets);
+        gameLoop = new GameLoop(gameView, 1000 / 60);  // Assuming 60 FPS
+        
+//		gameLoop.run();
 		
 		add(gameView);
 		setBounds(300, 100, background.getIconWidth(), background.getIconHeight());
