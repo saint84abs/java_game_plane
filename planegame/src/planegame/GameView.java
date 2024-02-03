@@ -11,13 +11,14 @@ public class GameView extends JPanel {
     private GameModel gameModel;
     private List<Enemy> enemies;
 	private List<Bullet> bullets = new ArrayList<>();
+	private GameController con = new GameController();
     private BufferedImage backBuffer;
     private Graphics2D g2d;
 	private Image backImage = new ImageIcon("image/myBackGround.jpg").getImage();
     private int fireDelay = 50;
 
     public GameView() {
-    	player = new Player();
+    	player = new Player(con);
     	
     }
     

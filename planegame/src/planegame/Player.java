@@ -11,15 +11,15 @@ import javax.swing.ImageIcon;
 public class Player implements Movable, ImageObserver {
 	// 객체 위치 전용 변수
 	private int planeX = 200, planeY = 700;
-	private Controller con = new Controller();
+	private GameController con;
 	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
 	private Image planeImage = new ImageIcon("image/myPlane.png").getImage();
 	
 	public Player() {
-		
+		con = new GameController();
 	}
 	
-	public Player(Controller con) {
+	public Player(GameController con) {
 		this.con = con;
 	}
 
@@ -35,9 +35,9 @@ public class Player implements Movable, ImageObserver {
 	
 	@Override
 	public void move() {
-		System.out.println("move method called");
+//		System.out.println("move method called, " + planeX + ", " + planeY);
 		if (con.getIsLeft()) {
-			System.out.println("left");
+			System.out.println("left" + planeX);
 			if (planeX <= 0) 
 				planeX = 0;
 			else 
@@ -50,6 +50,7 @@ public class Player implements Movable, ImageObserver {
 				planeX = background.getIconWidth() - planeImage.getWidth((ImageObserver) this);
 		}
 		if (con.getIsUp()) {
+			System.out.println("isup called!" + planeY);
 			if (planeY > 450)
 				planeY -= 1;
 			else 

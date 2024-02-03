@@ -5,5 +5,7 @@ public interface Movable {
 	public static final int y = 0;
 	public static final int speed = 0;
 	
-	public abstract void move();
+	public void move();
+
+//	public void move(GameController myCon);
 }

@@ -18,14 +18,10 @@ public class GamePanel extends JFrame {
     private GameModel gameModel = new GameModel();
     private GameView gameView;
     private GameLoop gameLoop;
-    private GameController gameController;
+    private GameController gameController = new GameController();
 	private Image backImage = new ImageIcon("image/myBackGround.jpg").getImage();
 	private ImageIcon background = new ImageIcon("image/myBackGround.jpg");
     public GamePanel() {
-
-        
-
-//
 //        // Create the model, view, and controller
 //        gameController = new GameController(gameView, gameLoop);
 //        
@@ -34,8 +30,6 @@ public class GamePanel extends JFrame {
 //        setVisible(true);
 //        this.setBounds(0, 0, backBuffer.getWidth(), backBuffer.getHeight());
 //        this.add(gameView);
-//        
-        
     }
     
     public GamePanel(String title) {
@@ -45,9 +39,11 @@ public class GamePanel extends JFrame {
 		setIgnoreRepaint(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
+		addKeyListener(gameController);
+		setFocusable(true);
 		
         // Create the game's objects
-        player = new Player();
+        player = new Player(gameController);
         enemies = new ArrayList<>();
         bullets = new ArrayList<>();
         
@@ -57,7 +53,8 @@ public class GamePanel extends JFrame {
         
 		gameView = new GameView(player, enemies, bullets);
         gameLoop = new GameLoop(gameView, 1000 / 60);  // Assuming 60 FPS
-        
+        Thread thread = new Thread(gameLoop);
+        thread.start();
 //		gameLoop.run();
 		
 		add(gameView);

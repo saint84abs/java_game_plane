@@ -8,6 +8,7 @@ public class Main extends JFrame {
 	private static ImageIcon background = new ImageIcon("image/myBackGround.jpg");
 	
 	public static void main(String args[]) {
+		
 		GamePanel g = new GamePanel("1944");
 //		g.startgame();
 	}
