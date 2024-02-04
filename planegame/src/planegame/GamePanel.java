@@ -51,7 +51,7 @@ public class GamePanel extends JFrame {
         backBuffer = new BufferedImage(background.getIconWidth(), background.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
         g2d = backBuffer.createGraphics();
         
-		gameView = new GameView(player, enemies, bullets);
+		gameView = new GameView(player, enemies, bullets, backBuffer);
         gameLoop = new GameLoop(gameView, 1000 / 60);  // Assuming 60 FPS
         Thread thread = new Thread(gameLoop);
         thread.start();

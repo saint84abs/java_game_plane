@@ -16,7 +16,7 @@ public class Player implements Movable, ImageObserver {
 	private Image planeImage = new ImageIcon("image/myPlane.png").getImage();
 	
 	public Player() {
-		con = new GameController();
+		
 	}
 	
 	public Player(GameController con) {
@@ -35,9 +35,9 @@ public class Player implements Movable, ImageObserver {
 	
 	@Override
 	public void move() {
-//		System.out.println("move method called, " + planeX + ", " + planeY);
+		System.out.println("move method called, " + planeX + ", " + planeY);
 		if (con.getIsLeft()) {
-			System.out.println("left" + planeX);
+			System.out.println("left!!!" + planeX);
 			if (planeX <= 0) 
 				planeX = 0;
 			else 
@@ -50,7 +50,7 @@ public class Player implements Movable, ImageObserver {
 				planeX = background.getIconWidth() - planeImage.getWidth((ImageObserver) this);
 		}
 		if (con.getIsUp()) {
-			System.out.println("isup called!" + planeY);
+			System.out.println("up is called!" + planeY);
 			if (planeY > 450)
 				planeY -= 1;
 			else 

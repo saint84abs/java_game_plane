@@ -52,7 +52,7 @@ public class GameLoop implements Runnable, ActionListener {
 	}
 	
 	@Override
-	public void run() {
+	public synchronized void run() {
 	    try {
 	        while (inGame) {
 //	            if (fireDelay <= 0) {
@@ -63,35 +63,35 @@ public class GameLoop implements Runnable, ActionListener {
 //	                fireDelay -= 2;
 //	        	gameView.Fire();
 	        	
-	            if (enemies.isEmpty()) {
-	            	enemies.add(new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_Normal.png", 20, 0));
-	            }
-	            Iterator<Enemy> itEnemy = enemies.iterator();
-
-	            
-	            Iterator<Bullet> itBullet = bullets.iterator();
-	            while (itBullet.hasNext()) {
-	                Bullet bullet = itBullet.next();
-
-	                if (bullet.getY() > 0) {
-	                    bullet.move();
-	                    itEnemy = enemies.iterator();
-	                    while (itEnemy.hasNext()) {
-	                        Enemy enemy = itEnemy.next();
-	                        if (isPixelPerfectCollision(toBufferedImage(enemy.getImage()), enemy.getX(), enemy.getY(), toBufferedImage(bullet.getImage()), bullet.getX(), bullet.getY())) {
-	                            System.out.println(enemy.getHP());
-	                            enemy.hit(bullet);
-	                            if (enemy.isDead()) {
-	                                itEnemy.remove();
-	                            }
-	                            itBullet.remove();
-	                            break;
-	                        }
-	                    }
-	                } else {
-	                    itBullet.remove();
-	                }
-	            }
+//	            if (enemies.isEmpty()) {
+//	            	enemies.add(new Enemy(EnemyPlaneX, EnemyPlaneY, 1, "image/EnemyPlane_Normal.png", 20, 0));
+//	            }
+//	            Iterator<Enemy> itEnemy = enemies.iterator();
+//
+//	            
+//	            Iterator<Bullet> itBullet = bullets.iterator();
+//	            while (itBullet.hasNext()) {
+//	                Bullet bullet = itBullet.next();
+//
+//	                if (bullet.getY() > 0) {
+//	                    bullet.move();
+//	                    itEnemy = enemies.iterator();
+//	                    while (itEnemy.hasNext()) {
+//	                        Enemy enemy = itEnemy.next();
+//	                        if (isPixelPerfectCollision(toBufferedImage(enemy.getImage()), enemy.getX(), enemy.getY(), toBufferedImage(bullet.getImage()), bullet.getX(), bullet.getY())) {
+//	                            System.out.println(enemy.getHP());
+//	                            enemy.hit(bullet);
+//	                            if (enemy.isDead()) {
+//	                                itEnemy.remove();
+//	                            }
+//	                            itBullet.remove();
+//	                            break;
+//	                        }
+//	                    }
+//	                } else {
+//	                    itBullet.remove();
+//	                }
+//	            }
 	            
 	            gamePanel.repaint();
 	            Thread.sleep(delay);

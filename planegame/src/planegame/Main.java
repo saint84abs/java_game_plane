@@ -10,7 +10,7 @@ public class Main extends JFrame {
 	public static void main(String args[]) {
 		
 		GamePanel g = new GamePanel("1944");
-//		g.startgame();
+		g.startGame();
 	}
 }
 

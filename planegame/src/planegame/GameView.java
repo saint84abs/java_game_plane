@@ -22,13 +22,12 @@ public class GameView extends JPanel {
     	
     }
     
-    public GameView(Player player, List<Enemy> enemies, List<Bullet> bullets) {
+    public GameView(Player player, List<Enemy> enemies, List<Bullet> bullets, BufferedImage backBuffer) {
         this.player = player;
         this.enemies = enemies;
         this.bullets = bullets;
         this.backBuffer = backBuffer;
         this.gameModel = new GameModel();
-        this.backImage = backImage;
 
 //        setFocusable(true);
 //        setVisible(true);
