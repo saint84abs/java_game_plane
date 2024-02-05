@@ -8,7 +8,7 @@ import java.awt.image.ImageObserver;
 import javax.swing.ImageIcon;
 
 
-public class Player implements Movable, ImageObserver {
+public class Player implements Movable {
 	// 객체 위치 전용 변수
 	private int planeX = 200, planeY = 700;
 	private GameController con;
@@ -23,11 +23,11 @@ public class Player implements Movable, ImageObserver {
 		this.con = con;
 	}
 
-    @Override
-    public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
-        // ImageObserver 인터페이스를 구현하는 코드
-        return false;
-    }
+//    @Override
+//    public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+//        // ImageObserver 인터페이스를 구현하는 코드
+//        return false;
+//    }
 
 	public void drawPlane(Graphics2D g2d, ImageObserver IO) {
 		g2d.drawImage(planeImage, planeX, planeY, IO);
@@ -35,7 +35,7 @@ public class Player implements Movable, ImageObserver {
 	
 	@Override
 	public void move() {
-		System.out.println("move method called, " + planeX + ", " + planeY);
+//		System.out.println("move method called, " + planeX + ", " + planeY);
 		if (con.getIsLeft()) {
 			System.out.println("left!!!" + planeX);
 			if (planeX <= 0) 
@@ -50,7 +50,7 @@ public class Player implements Movable, ImageObserver {
 				planeX = background.getIconWidth() - planeImage.getWidth((ImageObserver) this);
 		}
 		if (con.getIsUp()) {
-			System.out.println("up is called!" + planeY);
+			System.out.println("up!" + planeY);
 			if (planeY > 450)
 				planeY -= 1;
 			else 

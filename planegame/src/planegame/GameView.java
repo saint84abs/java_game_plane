@@ -19,7 +19,6 @@ public class GameView extends JPanel {
 
     public GameView() {
     	player = new Player(con);
-    	
     }
     
     public GameView(Player player, List<Enemy> enemies, List<Bullet> bullets, BufferedImage backBuffer) {
