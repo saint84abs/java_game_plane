@@ -9,6 +9,11 @@ import java.util.Iterator;
 import java.util.List;
 import javax.swing.*;
 
+import restart.GameController;
+import restart.GameModel;
+import restart.GameView;
+import restart.Player;
+
 public class GamePanel extends JFrame {
     private Player player;
     private List<Enemy> enemies;

@@ -7,6 +7,8 @@ import java.awt.image.ImageObserver;
 
 import javax.swing.ImageIcon;
 
+import restart.GameController;
+
 
 public class Player implements Movable {
 	// 객체 위치 전용 변수

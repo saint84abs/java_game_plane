@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Random;
 import javax.swing.ImageIcon;
 
+import restart.GamePanel;
+
 public class LevelDesign {
 	// 적의 위치, 이동 속도, 이미지 등
 	private int x, y;

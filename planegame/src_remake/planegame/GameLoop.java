@@ -12,6 +12,10 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import restart.GameController;
+import restart.GameView;
+import restart.Player;
+
 public class GameLoop implements Runnable, ActionListener {
 	// 스레드용 변수
 	private boolean inGame = true;

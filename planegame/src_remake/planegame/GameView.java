@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 
+import restart.GameController;
+import restart.GameModel;
+import restart.Player;
+
 public class GameView extends JPanel {
     private Player player;
     private GameModel gameModel;

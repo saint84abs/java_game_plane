@@ -4,6 +4,8 @@ import java.awt.Image;
 
 import javax.swing.*;
 
+import restart.GamePanel;
+
 public class Main extends JFrame {	
 	private static ImageIcon background = new ImageIcon("image/myBackGround.jpg");
 	

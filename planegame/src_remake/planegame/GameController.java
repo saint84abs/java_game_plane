@@ -3,6 +3,8 @@ package planegame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import restart.GameView;
+
 
 public class GameController implements KeyListener {
     private GameView gameView;
