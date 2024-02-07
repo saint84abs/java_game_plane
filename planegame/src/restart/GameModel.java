@@ -6,7 +6,6 @@ import java.beans.PropertyChangeSupport;
 
 import javax.swing.*;
 
-import planegame.Player;
 
 public class GameModel {
 	private Image playerImage = new ImageIcon("image/myPlane.png").getImage();
