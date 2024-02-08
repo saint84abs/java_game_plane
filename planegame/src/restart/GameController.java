@@ -5,30 +5,18 @@ import java.awt.event.KeyEvent;
 import planegame.GameLoop;
 import planegame.GameView;
 
-public class GameController implements Movable {
+public class GameController {
     private GameView gameView;
+    private GameModel gameModel;
     private GameLoop gameLoop;
     private Player player;
     
-    public GameController() {
-    	this.player = new Player();
-    }
-	
-	@Override
-	public void moveUp() {
-    	
-    };
-    @Override
-    public void moveDown() {
-    	
-    };
-    @Override
-    public void moveLeft() {
-    	
-    };
-    @Override
-    public void moveRight() {
-    	
+	private MyPropertyListener myPl;
+    
+    public GameController(Player player, GameModel gameModel) {
+    	this.player = player;
+    	this.gameModel = gameModel;
+    	this.gameModel.addPropertyChangeListener(myPl);
     }
 
 	public void handleKeyInput(KeyEvent e) {

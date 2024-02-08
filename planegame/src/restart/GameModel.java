@@ -12,15 +12,15 @@ public class GameModel {
 	private Image bulletImage = new ImageIcon("image/bullet.png").getImage();
 	private Image enemy_Boss = new ImageIcon("image/EnemyPlane_BOSS.png").getImage();
 	private Image enemy_Normal = new ImageIcon("image/EnemyPlane_Normal.jpg").getImage();
-	private Image backGround = new ImageIcon("image/myBackGround.jpg").getImage();
+	private ImageIcon backGround = new ImageIcon("image/myBackGround.jpg");
 	
 	private Player player;
 	
 	private PropertyChangeSupport support;
 	private String data;
 	
-	public GameModel() {
-		player = new Player();
+	public GameModel(Player player) {
+		this.player = player;
 		support = new PropertyChangeSupport(this);
 		
 	}
@@ -55,6 +55,9 @@ public class GameModel {
     	return enemy_Normal;
     }
     public Image getBackGroundImage() {
+    	return backGround.getImage();
+    }
+    public ImageIcon getBackGroundIcon() {
     	return backGround;
     }
 }

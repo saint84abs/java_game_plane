@@ -4,18 +4,16 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 import javax.swing.*;
 
-import planegame.GameController;
-
 public class Player implements Movable {
 	private int planeX = 200, planeY = 700;
-	private GameController con;
+	private GameController Controller;
 	
 	public Player() {
 		
 	}
 	
 	public Player(GameController con) {
-		this.con = con;
+		this.Controller = con;
 	}
 	
 	public void move(int x, int y) {

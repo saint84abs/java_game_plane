@@ -44,7 +44,7 @@ public class GameController implements KeyListener {
  * 다만, isLEFT가 true로 설정되어 있는 것을 고려했을 때, 이대로 실행한다면 player객체에
  * true값만이 전달됨. 다시말해, 키 리스너로 수정되는 isLEFT값이 반영되지 않는다는거
  * 
- * 
+ * setFocusable이 gamepanel에 설정되어 있어서 그랬던듯?
  */
     
 	
