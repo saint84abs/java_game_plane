@@ -1,27 +1,26 @@
 package restart;
 
 import java.awt.event.KeyEvent;
-
-import planegame.GameLoop;
-import planegame.GameView;
+import java.lang.ModuleLayer.Controller;
 
 public class GameController {
-    private GameView gameView;
-    private GameModel gameModel;
-    private GameLoop gameLoop;
+    private GameView View;
+    private GameModel Model;
+    private GameLoop Loop;
     private Player player;
     
 	private MyPropertyListener myPl;
     
-    public GameController(Player player, GameModel gameModel) {
+    public GameController(Player player, GameModel Model) {
     	this.player = player;
-    	this.gameModel = gameModel;
-    	this.gameModel.addPropertyChangeListener(myPl);
+    	this.Model = Model;
+    	this.Model.addPropertyChangeListener(myPl);
     }
 
 	public void handleKeyInput(KeyEvent e) {
 		switch(e.getKeyCode()) {
 		case KeyEvent.VK_UP:
+			System.out.println("UP!!");
 			player.move(0, -1);
 			break;
 		case KeyEvent.VK_DOWN:
@@ -33,6 +32,9 @@ public class GameController {
 		case KeyEvent.VK_RIGHT:
 			player.move(2, 0);
 			break;
+//		case KeyEvent.VK_E:
+//			Loop.setIsGame(true);
+//			break;
 		}
 	};
     

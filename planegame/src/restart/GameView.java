@@ -29,6 +29,7 @@ public class GameView extends JPanel {
 		setFocusable(true);
 		addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
+				System.out.println("Pressed key!");
 				Controller.handleKeyInput(e);
 			}
 		});

@@ -1,13 +1,14 @@
 package restart;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
-
 import javax.swing.*;
 
 public class GamePanel extends JFrame {
 	private GameModel Model;
 	private GameView View;
+	private GameLoop Loop;
 	private GameController Controller;
 	
 	private Player player;
@@ -21,7 +22,10 @@ public class GamePanel extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 		//Controller 초기화 필요
-		player = new Player(Controller);
+		player = new Player();
+		Model = new GameModel(player);
+		Controller = new GameController(player, Model);
+		
 		
 		backBuffer = new BufferedImage
 			(Model.getBackGroundIcon().getIconWidth(),
@@ -30,6 +34,9 @@ public class GamePanel extends JFrame {
 		g2d = backBuffer.createGraphics();
 		
 		View = new GameView(player, Model, Controller);
+
+		Loop = new GameLoop(player, Model, Controller, this);
+//		Loop.run();
 		
 		add(View);
 		setBounds(300, 100,
