@@ -26,13 +26,7 @@ public class GameView extends JPanel {
 		this.Model = Model;
 		this.Model.addPropertyChangeListener(myPl);
 		this.Controller = con;
-		setFocusable(true);
-		addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				System.out.println("Pressed key!");
-				Controller.handleKeyInput(e);
-			}
-		});
+
 	}
 	
 	// 화면 출력

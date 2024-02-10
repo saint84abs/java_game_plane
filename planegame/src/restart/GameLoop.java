@@ -2,10 +2,12 @@ package restart;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+
 import javax.swing.Timer;
 import javax.swing.JPanel;
 
-public class GameLoop implements Runnable{
+public class GameLoop implements Runnable, ActionListener {
 	private GameModel Model;
 	private GameView View;
 	private GameController Controller;
@@ -24,10 +26,10 @@ public class GameLoop implements Runnable{
 	
 	
 	
-//	private void initVariables(int fps) {
-//		timer = new Timer(1000 / fps, this);
-//		timer.start();
-//	}
+	private void initVariables(int fps) {
+		timer = new Timer(1000 / fps, this);
+		timer.start();
+	}
 	
 	public GameLoop(Player player, GameModel Model, GameController con, GamePanel Panel) {
 		this.player = player;
@@ -35,31 +37,30 @@ public class GameLoop implements Runnable{
 		this.Controller = con;
 		this.Panel = Panel;
 //		this.delay = delay;
-//		initVariables(FPS);
+		initVariables(FPS);
 	}
 	
+	
 	public void updateGame() {
-		Panel.repaint();
 	}
 	
 	public void setIsGame(boolean isGame) {
 		this.isGame = isGame;
 	}
+
 	
+	@Override 
+	public void actionPerformed(ActionEvent e) {
+		Panel.repaint();
+	}
 	
 	@Override
 	public void run() {
+//		System.out.println("hello");
 		while (isGame) {
-			double now = System.currentTimeMillis();
-			double updateLength = now - lastUpdateTime;
-			lastUpdateTime = now;
-			delta += updateLength;
-			
-			while (delta >= 1) {
-				updateGame();
-				delta--;
+			if (Controller.getPressed()) {
+
 			}
-			// renderGame();			
 		}
 	}
 }

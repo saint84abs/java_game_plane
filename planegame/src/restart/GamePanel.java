@@ -26,6 +26,13 @@ public class GamePanel extends JFrame {
 		Model = new GameModel(player);
 		Controller = new GameController(player, Model);
 		
+		setFocusable(true);
+		addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				System.out.println("Pressed key!");
+				Controller.handleKeyInput(e);
+			}
+		});
 		
 		backBuffer = new BufferedImage
 			(Model.getBackGroundIcon().getIconWidth(),
@@ -37,6 +44,8 @@ public class GamePanel extends JFrame {
 
 		Loop = new GameLoop(player, Model, Controller, this);
 //		Loop.run();
+		Thread thread = new Thread(Loop);
+		thread.start();
 		
 		add(View);
 		setBounds(300, 100,

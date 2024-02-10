@@ -10,6 +10,9 @@ public class GameController {
     private Player player;
     
 	private MyPropertyListener myPl;
+	
+	private KeyEvent e;
+	private boolean isPressed;
     
     public GameController(Player player, GameModel Model) {
     	this.player = player;
@@ -32,10 +35,23 @@ public class GameController {
 		case KeyEvent.VK_RIGHT:
 			player.move(2, 0);
 			break;
+		
 //		case KeyEvent.VK_E:
 //			Loop.setIsGame(true);
 //			break;
 		}
-	};
+	}
+	
+	public void setKeyState(KeyEvent e, boolean isPressed) {
+		this.e = e;
+		this.isPressed = isPressed;
+	}
+	
+	public KeyEvent getKeyEvent() {
+		return e;
+	}
+	public boolean getPressed() {
+		return isPressed;
+	}
     
 }
