@@ -1,7 +1,6 @@
 package restart;
 
 import java.awt.event.KeyEvent;
-import java.lang.ModuleLayer.Controller;
 
 public class GameController {
     private GameView View;

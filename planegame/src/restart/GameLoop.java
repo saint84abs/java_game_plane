@@ -19,7 +19,6 @@ public class GameLoop implements Runnable, ActionListener {
 	private int FPS = 75;
 	private boolean isGame = true;
 	
-	private GamePanel Panel;
 	
 	private double lastUpdateTime = System.currentTimeMillis();
 	private double delta = 0;
@@ -31,11 +30,15 @@ public class GameLoop implements Runnable, ActionListener {
 		timer.start();
 	}
 	
-	public GameLoop(Player player, GameModel Model, GameController con, GamePanel Panel) {
+	public void handleKeyInput(KeyEvent e) {
+		Controller.handleKeyInput(e);
+	}
+	
+	public GameLoop(Player player, GameModel Model, GameController con, GameView View) {
 		this.player = player;
 		this.Model = Model;
 		this.Controller = con;
-		this.Panel = Panel;
+		this.View = View;
 //		this.delay = delay;
 		initVariables(FPS);
 	}
@@ -51,16 +54,14 @@ public class GameLoop implements Runnable, ActionListener {
 	
 	@Override 
 	public void actionPerformed(ActionEvent e) {
-		Panel.repaint();
+		View.repaint();
 	}
 	
 	@Override
 	public void run() {
 //		System.out.println("hello");
 		while (isGame) {
-			if (Controller.getPressed()) {
-
-			}
+			
 		}
 	}
 }
