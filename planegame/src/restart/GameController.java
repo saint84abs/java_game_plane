@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 public class GameController {
     private GameView View;
     private GameModel Model;
-    private GameLoop Loop;
     private Player player;
     
 	private MyPropertyListener myPl;
@@ -20,25 +19,8 @@ public class GameController {
     }
 
 	public void handleKeyInput(KeyEvent e) {
-		switch(e.getKeyCode()) {
-		case KeyEvent.VK_UP:
-			System.out.println("UP!!");
-			player.move(0, -1);
-			break;
-		case KeyEvent.VK_DOWN:
-			player.move(0, 1);
-			break;
-		case KeyEvent.VK_LEFT:
-			player.move(-2, 0);
-			break;
-		case KeyEvent.VK_RIGHT:
-			player.move(2, 0);
-			break;
-		
-//		case KeyEvent.VK_E:
-//			Loop.setIsGame(true);
-//			break;
-		}
+//		if (keyStates[KeyEvent.VK_UP])
+		player.move(e);
 	}
 	
 	public void setKeyState(KeyEvent e, boolean isPressed) {

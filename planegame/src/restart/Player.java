@@ -1,6 +1,7 @@
 package restart;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.ImageObserver;
 import javax.swing.*;
 
@@ -16,9 +17,35 @@ public class Player implements Movable {
 		this.Controller = con;
 	}
 	
-	public void move(int x, int y) {
-		planeX += x;
-		planeY += y;
+	public void move(KeyEvent e) {
+		switch(e.getKeyCode()) {
+		case KeyEvent.VK_LEFT:
+			System.out.println("left!!!" + planeX);
+			if (planeX <= 0) 
+				planeX = 0;
+			else 
+				planeX -= 2;
+			break;
+		case KeyEvent.VK_RIGHT:
+			if (planeX < 600)
+				planeX += 2;
+			else
+				planeX = 600;
+			break;
+		case KeyEvent.VK_UP:
+			System.out.println("up!" + planeY);
+			if (planeY > 450)
+				planeY -= 1;
+			else 
+				planeY = 450;
+			break;
+		case KeyEvent.VK_DOWN:
+			if (planeY >= 700)
+				planeY = 700;
+			else 
+				planeY += 1;
+			break;
+		}
 	}
 	
 	public void drawPlane(Image image, Graphics2D g2d, ImageObserver IO) {

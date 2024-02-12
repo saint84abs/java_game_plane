@@ -7,13 +7,14 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.*;
 
-public class GameView extends JFrame {
+public class GameView extends JFrame implements Runnable, ActionListener {
 	private GameModel Model;
 	private GameView View;
-	private GameLoop Loop;
 	private GameController Controller;
 	
 	private Player player;
+	
+	private boolean[] keyStates = new boolean[256];
 	
 	private BufferedImage backBuffer;
 	private Graphics2D g2d;
@@ -28,12 +29,17 @@ public class GameView extends JFrame {
             g.drawImage(backBuffer, 0, 0, this);
         }
     };
+    
+    private Timer timer;
+    private int FPS = 75;
+    private boolean inGame = true;
 	
 	public GameView(String title) {
 		super(title);
 		setResizable(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
+		initvariables(FPS);
 		
 		player = new Player();
 		Model = new GameModel(player);
@@ -42,8 +48,11 @@ public class GameView extends JFrame {
 		setFocusable(true);
 		addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
-				System.out.println("Pressed key!");
-				Controller.handleKeyInput(e);
+				keyStates[e.getKeyCode()] = true;
+//				Controller.handleKeyInput(e);
+			}
+			public void keyReleased(KeyEvent e) {
+				keyStates[e.getKeyCode()] = false;
 			}
 		});
 		
@@ -52,10 +61,6 @@ public class GameView extends JFrame {
 				Model.getBackGroundIcon().getIconHeight(), 
 				BufferedImage.TYPE_INT_ARGB);
 		g2d = backBuffer.createGraphics();
-			
-		Loop = new GameLoop(player, Model, Controller, this);
-		Thread thread = new Thread(Loop);
-		thread.start();
 		
 		add(panel);
 		setBounds(300, 100,
@@ -63,4 +68,23 @@ public class GameView extends JFrame {
 				Model.getBackGroundIcon().getIconHeight());
 	}
 
+	private void initvariables(int fps) {
+		timer = new Timer(1000 / fps, this);
+		timer.start();
+	}
+	
+	public boolean[] getKeyStates() {
+		return keyStates;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		this.repaint();
+	}
+	
+	@Override
+	public void run() {
+		
+	}
+	
 }

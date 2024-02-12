@@ -8,7 +8,7 @@ import javax.swing.*;
 public class GamePanel extends JFrame {
 	private GameModel Model;
 	private GameView View;
-	private GameLoop Loop;
+//	private GameLoop Loop;
 	private GameController Controller;
 	
 	private Player player;
