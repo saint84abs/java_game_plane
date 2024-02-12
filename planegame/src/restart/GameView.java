@@ -55,6 +55,8 @@ public class GameView extends JFrame implements Runnable, ActionListener {
 				keyStates[e.getKeyCode()] = false;
 			}
 		});
+		// controller로 키 입력 옮기고, 거기서 바로 player로 옮길거면
+		// 굳이 여기서 키 입력 받아야하나?
 		
 		backBuffer = new BufferedImage
 				(Model.getBackGroundIcon().getIconWidth(),
