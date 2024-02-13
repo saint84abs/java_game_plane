@@ -6,7 +6,7 @@ import java.awt.image.ImageObserver;
 import javax.swing.*;
 
 public class Player implements Movable {
-	private int planeX = 200, planeY = 700;
+	private int planeX = 200, planeY = 700, speed = 1;
 	private GameController Controller;
 	
 	public Player() {
@@ -54,19 +54,19 @@ public class Player implements Movable {
 	// Movable 오버라이딩, 비행기의 좌표 처리
 	@Override
 	public void moveUp() {
-    	planeY -= 1;
+    	planeY -= speed;
     };
     @Override
     public void moveDown() {
-    	planeY += 1;
+    	planeY += speed;
     };
     @Override
     public void moveLeft() {
-    	planeX -= 2;
+    	planeX -= 2 * speed;
     };
     @Override
     public void moveRight() {
-    	planeX += 2;
+    	planeX += 2 * speed;
     };
 	
 //	@Override

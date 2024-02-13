@@ -1,6 +1,7 @@
 package restart;
 
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class GameController {
     private GameView View;
@@ -11,23 +12,29 @@ public class GameController {
 	
 	private KeyEvent e;
 	private boolean isPressed;
+	
+    private boolean[] keyStates = new boolean[256];
     
-    public GameController(Player player, GameModel Model) {
+    public GameController(Player player, GameModel Model, GameView View) {
     	this.player = player;
     	this.Model = Model;
+    	this.View = View;
     	this.Model.addPropertyChangeListener(myPl);
     }
 
-	public void handleKeyInput(KeyEvent e) {
-//		if (keyStates[KeyEvent.VK_UP])
-		player.move(e);
+	public void handleKeyInput(boolean keyStates[]) {
+//		int key = View.getKeyStates()[]
+        if (keyStates[KeyEvent.VK_UP]) {
+        	player.moveUp();
+        }
+        if (keyStates[KeyEvent.VK_DOWN]) 
+            player.moveDown();
+        if (keyStates[KeyEvent.VK_LEFT])
+        	player.moveLeft();
+        if (keyStates[KeyEvent.VK_RIGHT])
+        	player.moveRight();
 	}
-	
-	public void setKeyState(KeyEvent e, boolean isPressed) {
-		this.e = e;
-		this.isPressed = isPressed;
-	}
-	
+
 	public KeyEvent getKeyEvent() {
 		return e;
 	}

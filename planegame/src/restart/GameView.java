@@ -7,7 +7,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.*;
 
-public class GameView extends JFrame implements Runnable, ActionListener {
+public class GameView extends JFrame implements ActionListener {
 	private GameModel Model;
 	private GameView View;
 	private GameController Controller;
@@ -39,31 +39,29 @@ public class GameView extends JFrame implements Runnable, ActionListener {
 		setResizable(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
-		initvariables(FPS);
 		
 		player = new Player();
 		Model = new GameModel(player);
-		Controller = new GameController(player, Model);
+		Controller = new GameController(player, Model, this);
 		
 		setFocusable(true);
 		addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				keyStates[e.getKeyCode()] = true;
-//				Controller.handleKeyInput(e);
 			}
 			public void keyReleased(KeyEvent e) {
 				keyStates[e.getKeyCode()] = false;
 			}
 		});
-		// controller로 키 입력 옮기고, 거기서 바로 player로 옮길거면
-		// 굳이 여기서 키 입력 받아야하나?
 		
+		// 백버퍼에 아무것도 그리고있지 않음//
 		backBuffer = new BufferedImage
 				(Model.getBackGroundIcon().getIconWidth(),
 				Model.getBackGroundIcon().getIconHeight(), 
 				BufferedImage.TYPE_INT_ARGB);
 		g2d = backBuffer.createGraphics();
-		
+
+		initvariables(FPS);
 		add(panel);
 		setBounds(300, 100,
 				Model.getBackGroundIcon().getIconWidth(),
@@ -81,12 +79,7 @@ public class GameView extends JFrame implements Runnable, ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		this.repaint();
+		Controller.handleKeyInput(keyStates);
+		this.repaint();		
 	}
-	
-	@Override
-	public void run() {
-		
-	}
-	
 }
