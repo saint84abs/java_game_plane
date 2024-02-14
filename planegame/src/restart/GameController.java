@@ -39,10 +39,8 @@ public class GameController {
         	player.moveLeft();
         if (keyStates[KeyEvent.VK_RIGHT])
         	player.moveRight();
-        if (keyStates[KeyEvent.VK_E]) {
+        if (keyStates[KeyEvent.VK_E]) 
         	Fire();
-        	
-        }
 	}
 	
 	public void addBullet(Player p) {
