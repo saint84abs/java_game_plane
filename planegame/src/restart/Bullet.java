@@ -5,7 +5,7 @@ import java.awt.Image;
 import java.awt.image.ImageObserver;
 
 public class Bullet {
-	private int bulletX, bulletY;
+	private int bulletX, bulletY, speed = 10;
 	private Player player;
 	private GameController Controller;
 	
@@ -18,6 +18,13 @@ public class Bullet {
 	public void drawBullet(Image image, Graphics2D g2d, ImageObserver IO) {
 		g2d.drawImage(image, bulletX, bulletY, IO);
 	}
+
+	public boolean isOutOfScreen() {
+		return bulletY < 0;
+	}
 	
-	
+	public void move() {
+		System.out.println("move bullet!");
+		bulletY -= speed;
+	}
 }

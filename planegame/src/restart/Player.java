@@ -17,88 +17,39 @@ public class Player implements Movable {
 		this.Controller = con;
 	}
 	
-	public void move(KeyEvent e) {
-		switch(e.getKeyCode()) {
-		case KeyEvent.VK_LEFT:
-			System.out.println("left!!!" + planeX);
-			if (planeX <= 0) 
-				planeX = 0;
-			else 
-				planeX -= 2;
-			break;
-		case KeyEvent.VK_RIGHT:
-			if (planeX < 600)
-				planeX += 2;
-			else
-				planeX = 600;
-			break;
-		case KeyEvent.VK_UP:
-			System.out.println("up!" + planeY);
-			if (planeY > 450)
-				planeY -= 1;
-			else 
-				planeY = 450;
-			break;
-		case KeyEvent.VK_DOWN:
-			if (planeY >= 700)
-				planeY = 700;
-			else 
-				planeY += 1;
-			break;
-		}
-	}
-	
 	public void drawPlane(Image image, Graphics2D g2d, ImageObserver IO) {
 		g2d.drawImage(image, planeX, planeY, IO);
 	}
+	
 	// Movable 오버라이딩, 비행기의 좌표 처리
 	@Override
 	public void moveUp() {
-    	planeY -= speed;
+		if (planeY > 450)
+			planeY -= speed;
+		else 
+			planeY = 450;
     };
     @Override
     public void moveDown() {
-    	planeY += speed;
+		if (planeY >= 800)
+			planeY = 800;
+		else 
+			planeY += speed;
     };
     @Override
     public void moveLeft() {
-    	planeX -= 2 * speed;
+		if (planeX <= 0) 
+			planeX = 0;
+		else 
+			planeX -= 2 * speed;
     };
     @Override
     public void moveRight() {
-    	planeX += 2 * speed;
+		if (planeX < 380)
+			planeX += 2 * speed;
+		else
+			planeX = 380;
     };
-	
-//	@Override
-//	public void move() {
-////		System.out.println("move method called, " + planeX + ", " + planeY);
-//		if (con.getIsLeft()) {
-//			System.out.println("left!!!" + planeX);
-//			if (planeX <= 0) 
-//				planeX = 0;
-//			else 
-//				planeX -= 2;
-//		}
-//		if (con.getIsRight()) {
-//			if (planeX < background.getIconWidth() - planeImage.getWidth((ImageObserver) this))
-//				planeX += 2;
-//			else
-//				planeX = background.getIconWidth() - planeImage.getWidth((ImageObserver) this);
-//		}
-//		if (con.getIsUp()) {
-//			System.out.println("up!" + planeY);
-//			if (planeY > 450)
-//				planeY -= 1;
-//			else 
-//				planeY = 450;
-//		}
-//		if (con.getIsDown()) {
-//			if (planeY >= background.getIconHeight() - planeImage.getHeight((ImageObserver) this))
-//				planeY = background.getIconHeight() - planeImage.getHeight((ImageObserver) this);
-//			else 
-//				planeY += 1;
-//		}
-//	}
 	
 	public int getX() {
 		return planeX;

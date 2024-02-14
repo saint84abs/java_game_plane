@@ -13,6 +13,7 @@ public class GameView extends JFrame implements ActionListener {
 	private GameController Controller;
 	
 	private Player player;
+	private Bullet bullet;
 	
 	private boolean[] keyStates = new boolean[256];
 	
@@ -26,6 +27,7 @@ public class GameView extends JFrame implements ActionListener {
             g2d = (Graphics2D) g;
             g2d.drawImage(Model.getBackGroundImage(), 0, 0, this);
             player.drawPlane(Model.getPlayerImage(), g2d, this);
+            Controller.drawBullet(Model.getBulletImage(), g2d, this);
             g.drawImage(backBuffer, 0, 0, this);
         }
     };
@@ -41,6 +43,7 @@ public class GameView extends JFrame implements ActionListener {
 		setVisible(true);
 		
 		player = new Player();
+		bullet = new Bullet(player);
 		Model = new GameModel(player);
 		Controller = new GameController(player, Model, this);
 		
@@ -80,6 +83,7 @@ public class GameView extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Controller.handleKeyInput(keyStates);
+		Controller.updateBullets();
 		this.repaint();		
 	}
 }
