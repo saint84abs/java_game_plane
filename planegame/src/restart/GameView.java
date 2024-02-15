@@ -28,6 +28,7 @@ public class GameView extends JFrame implements ActionListener {
             g2d.drawImage(Model.getBackGroundImage(), 0, 0, this);
             player.drawPlane(Model.getPlayerImage(), g2d, this);
             Controller.drawBullet(Model.getBulletImage(), g2d, this);
+            Controller.drawEnemy(Model.getPlayerImage(), g2d, this);
             g.drawImage(backBuffer, 0, 0, this);
         }
     };
@@ -84,6 +85,7 @@ public class GameView extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Controller.handleKeyInput(keyStates);
 		Controller.updateBullets();
+		Controller.updateEnemy();
 		this.repaint();		
 	}
 }

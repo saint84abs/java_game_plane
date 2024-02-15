@@ -5,7 +5,7 @@ import java.awt.Image;
 import java.awt.image.ImageObserver;
 
 public class Bullet {
-	private int bulletX, bulletY, speed = 10;
+	private int bulletX, bulletY, speed = 10, damage = 5;
 	private Player player;
 	private Enemy enemy;
 	private GameController Controller;
@@ -29,7 +29,6 @@ public class Bullet {
 	}
 	
 	public void move() {
-		System.out.println("move bullet!");
 		bulletY -= speed;
 	}
 }
