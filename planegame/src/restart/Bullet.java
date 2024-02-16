@@ -2,6 +2,7 @@ package restart;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.image.ImageObserver;
 
 public class Bullet {
@@ -30,5 +31,18 @@ public class Bullet {
 	
 	public void move() {
 		bulletY -= speed;
+	}
+	
+	public int getX() {
+		return bulletX;
+	}
+	public int getY() {
+		return bulletY;
+	}
+	public int getDamage() {
+		return damage;
+	}
+	public Rectangle getBounds(Image image) {
+		return new Rectangle(bulletX, bulletY, image.getWidth(null), image.getHeight(null));
 	}
 }

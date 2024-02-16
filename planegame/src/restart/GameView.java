@@ -28,14 +28,13 @@ public class GameView extends JFrame implements ActionListener {
             g2d.drawImage(Model.getBackGroundImage(), 0, 0, this);
             player.drawPlane(Model.getPlayerImage(), g2d, this);
             Controller.drawBullet(Model.getBulletImage(), g2d, this);
-            Controller.drawEnemy(Model.getPlayerImage(), g2d, this);
+            Controller.drawEnemy(Model.getEnemyNormalImage(), g2d, this);
             g.drawImage(backBuffer, 0, 0, this);
         }
     };
     
     private Timer timer;
     private int FPS = 75;
-    private boolean inGame = true;
 	
 	public GameView(String title) {
 		super(title);
@@ -58,13 +57,6 @@ public class GameView extends JFrame implements ActionListener {
 			}
 		});
 		
-		// 백버퍼에 아무것도 그리고있지 않음//
-		backBuffer = new BufferedImage
-				(Model.getBackGroundIcon().getIconWidth(),
-				Model.getBackGroundIcon().getIconHeight(), 
-				BufferedImage.TYPE_INT_ARGB);
-		g2d = backBuffer.createGraphics();
-
 		initvariables(FPS);
 		add(panel);
 		setBounds(300, 100,

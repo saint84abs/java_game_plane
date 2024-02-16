@@ -2,6 +2,7 @@ package restart;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.image.ImageObserver;
 
 public class Enemy {
@@ -36,7 +37,6 @@ public class Enemy {
 	}
 	
 	public void pattern_1() {
-		System.out.println("enemy called" + enemyX + enemyY);
 		enemyX += speed;
 		enemyY += 2 * speed;
 	}
@@ -47,6 +47,10 @@ public class Enemy {
 	public void pattern_3() {
 		enemyY += 2 * speed;
 	}
+	
+	public void setHP(int damage) {
+		this.hp -= damage;
+	}
 
 	public int getHP() {
 		return hp;
@@ -56,5 +60,8 @@ public class Enemy {
 	}
 	public int getY() {
 		return enemyY;
+	}
+	public Rectangle getBounds(Image image) {
+		return new Rectangle(enemyX, enemyY, image.getWidth(null), image.getHeight(null));
 	}
 }

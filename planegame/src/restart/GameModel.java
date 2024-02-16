@@ -11,7 +11,7 @@ public class GameModel {
 	private Image playerImage = new ImageIcon("image/myPlane.png").getImage();
 	private Image bulletImage = new ImageIcon("image/bullet.png").getImage();
 	private Image enemy_Boss = new ImageIcon("image/EnemyPlane_BOSS.png").getImage();
-	private Image enemy_Normal = new ImageIcon("image/EnemyPlane_Normal.jpg").getImage();
+	private Image enemy_Normal = new ImageIcon("image/EnemyPlane_Normal.png").getImage();
 	private ImageIcon backGround = new ImageIcon("image/myBackGround.jpg");
 	
 	private Player player;
@@ -22,7 +22,6 @@ public class GameModel {
 	public GameModel(Player player) {
 		this.player = player;
 		support = new PropertyChangeSupport(this);
-		
 	}
 	
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
