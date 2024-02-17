@@ -8,11 +8,12 @@ import java.awt.image.ImageObserver;
 public class Enemy {
 	private int enemyX, enemyY, speed = 1;
 	private int hp;
+	private int score = 1;
 	private Player player;
 	
 	
 	public Enemy(int hp, int speed) {
-		enemyX = 0;
+		enemyX = 200;
 		enemyY = 0;
 		this.hp = hp;
 		this.speed = speed;
@@ -20,6 +21,10 @@ public class Enemy {
 	
 	public void drawEnemy(Image image, Graphics2D g2d, ImageObserver IO) {
 		g2d.drawImage(image, enemyX, enemyY, IO);
+	}
+	
+	public int dropScore(int difficulty) {
+		return score * difficulty;
 	}
 	
 	public void move(int movePattern) {
@@ -37,6 +42,7 @@ public class Enemy {
 	}
 	
 	public void pattern_1() {
+
 		enemyX += speed;
 		enemyY += 2 * speed;
 	}

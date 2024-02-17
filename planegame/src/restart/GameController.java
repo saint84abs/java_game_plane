@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+import javax.swing.JLabel;
+
 public class GameController {
 	// MVC패턴 변수
     private GameView View;
@@ -25,9 +27,15 @@ public class GameController {
     
     // 적 객체 변수
     private ArrayList<Enemy> enemies;
-    private int hp = 30, speed = 1;
+    private Enemy Boss;
+    private int hp = 10, speed = 1;
     private Random random = new Random();
     private int pattern;
+    
+    // 게임 내부 정보 변수
+    private int score = 10;
+    private int difficulty = 1;
+
 
     public GameController(Player player, GameModel Model, GameView View) {
     	this.player = player;
@@ -69,7 +77,6 @@ public class GameController {
 			if (bullet.isOutOfScreen()) {
 				it.remove();
 			}
-			
 			bullet.move();
 		}
 	}
@@ -84,7 +91,7 @@ public class GameController {
 	}
 	
 	public void addEnemy() {
-		enemies.add(new Enemy(hp, speed));
+		enemies.add(new Enemy(hp * difficulty, speed));
 		pattern = random.nextInt(3) + 1;
 	}
 	
@@ -94,13 +101,14 @@ public class GameController {
 		}
 	}
 	
-	public void updateEnemy() {
-		if (enemies.isEmpty())
-			enemies.add(new Enemy(hp, speed));
+	public void updateEnemy() {		
+		if (enemies.size() <= 3 && score < 30 * difficulty) {
+			addEnemy();		
+		}
 		Iterator<Enemy> it = enemies.iterator();
 		while (it.hasNext()) {
 			Enemy enemies = it.next();
-			if (enemies.getHP() <= 0 || enemies.getX() >= 400 || enemies.getX() < 0 || enemies.getY() > 800 || enemies.getY() < 0) 
+			if (enemies.getX() >= 400 || enemies.getX() < 0 || enemies.getY() > 800 || enemies.getY() < 0) 
 				it.remove();
 			enemies.move(pattern);
 			
@@ -110,19 +118,35 @@ public class GameController {
 	            if (checkCollision(bullet, enemies)) {
 	            	enemies.setHP(bullet.getDamage());
 	                bulletIterator.remove();
-	                if (enemies.getHP() <= 0)
+	                if (enemies.getHP() <= 0) {
 	                	it.remove();
-	                else
-	                	continue;
+	                	score += enemies.dropScore(difficulty);
+	                	System.out.println(score);
+	                }
 	                break;
 	            }
 	        }
+	        
+	        if (score == 30 * difficulty) 
+	        	break;
 		}
+		bossEvent();
+		difficulty += 1;
+	}
+	
+	public void bossEvent() {
+		int hp_boss = 100 * difficulty;
+		
 	}
 	
 	public boolean checkCollision(Bullet bullet, Enemy enemy) {
 		return bullet.getBounds(Model.getBulletImage()).intersects(enemy.getBounds(Model.getEnemyNormalImage()));
 	}
 	
-
+	public int getScore() {
+		return score;
+	}
+//	public JLabel getScore() {
+//		
+//	}
 }
