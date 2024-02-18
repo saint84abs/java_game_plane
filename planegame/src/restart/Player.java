@@ -7,14 +7,17 @@ import javax.swing.*;
 
 public class Player implements Movable {
 	private int planeX = 200, planeY = 700, speed = 1;
+	private int hp;
 	private GameController Controller;
 	
 	public Player() {
-		
+		hp = 100;
 	}
 	
 	public Player(GameController con) {
 		this.Controller = con;
+		
+		hp = 100;
 	}
 	
 	public void drawPlane(Image image, Graphics2D g2d, ImageObserver IO) {
@@ -50,11 +53,22 @@ public class Player implements Movable {
 		else
 			planeX = 380;
     };
+    
+    public void setHP(int damage) {
+    	this.hp -= damage;
+    	System.out.println(hp);
+    }
 	
 	public int getX() {
 		return planeX;
 	}
 	public int getY() {
 		return planeY;
+	}
+	public int getHP() {
+		return hp;
+	}
+	public Rectangle getBounds(Image image) {
+		return new Rectangle(planeX, planeY, image.getWidth(null), image.getHeight(null));
 	}
 }

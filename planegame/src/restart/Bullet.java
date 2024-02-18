@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 import java.awt.image.ImageObserver;
 
 public class Bullet {
-	private int bulletX, bulletY, speed = 10, damage = 5;
+	private int bulletX, bulletY, damage = 5;
 	private Player player;
 	private Enemy enemy;
 	private GameController Controller;
@@ -19,6 +19,8 @@ public class Bullet {
 	
 	public Bullet(Enemy enemy) {
 		this.enemy = enemy;
+		bulletX = enemy.getX();
+		bulletY = enemy.getY();
 	}
 	
 	public void drawBullet(Image image, Graphics2D g2d, ImageObserver IO) {
@@ -29,7 +31,7 @@ public class Bullet {
 		return bulletY < 0;
 	}
 	
-	public void move() {
+	public void move(int speed) {
 		bulletY -= speed;
 	}
 	

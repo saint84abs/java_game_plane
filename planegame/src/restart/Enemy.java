@@ -9,8 +9,9 @@ public class Enemy {
 	private int enemyX, enemyY, speed = 1;
 	private int hp;
 	private int score = 1;
-	private Player player;
 	
+	private Player player;
+//	private ArrayList<Bullet> bullets = new ArrayList<>();
 	
 	public Enemy(int hp, int speed) {
 		enemyX = 200;
@@ -42,7 +43,6 @@ public class Enemy {
 	}
 	
 	public void pattern_1() {
-
 		enemyX += speed;
 		enemyY += 2 * speed;
 	}
@@ -55,6 +55,7 @@ public class Enemy {
 	}
 	
 	public void setHP(int damage) {
+		System.out.println("damage");
 		this.hp -= damage;
 	}
 
