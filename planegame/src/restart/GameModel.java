@@ -9,8 +9,7 @@ import javax.swing.*;
 
 public class GameModel {
 	private Image playerImage = new ImageIcon("image/myPlane.png").getImage();
-	private Image bulletImage = new ImageIcon("image/bullet.png").getImage();
-	private Image enemyBulletImage = new ImageIcon("image/enemyBullet.png").getImage();
+	private Image bulletImage = new ImageIcon("image/Bullet.png").getImage();
 	private Image enemy_Boss = new ImageIcon("image/EnemyPlane_BOSS.png").getImage();
 	private Image enemy_Normal = new ImageIcon("image/EnemyPlane_Normal.png").getImage();
 	private ImageIcon backGround = new ImageIcon("image/myBackGround.jpg");
@@ -47,9 +46,6 @@ public class GameModel {
     }
     public Image getBulletImage() {
     	return bulletImage;
-    }
-    public Image getEnemyBulletImage() {
-    	return enemyBulletImage;
     }
     public Image getEnemyBossImage() {
     	return enemy_Boss;

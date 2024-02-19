@@ -38,7 +38,7 @@ public class GameController {
     // 게임 내부 정보 변수
     private int score = 0;
     private int difficulty = 1;
-
+    BufferedImage bulletImage, enemyImage, playerImage;
 
     public GameController(Player player, GameModel Model, GameView View) {
     	this.player = player;
@@ -49,6 +49,10 @@ public class GameController {
     	bullets = new ArrayList<>();
     	enemyBullets = new ArrayList<>();
     	enemies = new ArrayList<>();
+    	
+    	bulletImage = toBufferedImage(Model.getBulletImage());
+    	enemyImage = toBufferedImage(Model.getEnemyNormalImage());
+    	playerImage = toBufferedImage(Model.getPlayerImage());
     }
 
 	public void handleKeyInput(boolean keyStates[]) {
@@ -142,7 +146,7 @@ public class GameController {
 	        Iterator<Bullet> enemyBulletIterator = enemyBullets.iterator();
 	        while (bulletIterator.hasNext()) {
 	            Bullet bullet = bulletIterator.next();
-	            if (checkCollision(bullet, enemies)) {
+	            if (isPixelPerfectCollision(bulletImage, bullet.getX(), bullet.getY(), enemyImage, enemies.getX(), enemies.getY())) {
 	            	enemies.setHP(bullet.getDamage());
 	                bulletIterator.remove();
 	                if (enemies.getHP() <= 0) {
@@ -155,7 +159,7 @@ public class GameController {
 	        }
 	        while (enemyBulletIterator.hasNext()) {
 	            Bullet enemyBullet = enemyBulletIterator.next();
-	        	if (checkCollision(enemyBullet, player)) {
+	        	if (isPixelPerfectCollision(bulletImage, enemyBullet.getX(), enemyBullet.getY(), playerImage, player.getX(), player.getY())) {
 	        		player.setHP(enemyBullet.getDamage() * difficulty);
 	        		enemyBulletIterator.remove();
 	        		if (player.getHP() <= 0) {
@@ -177,11 +181,90 @@ public class GameController {
 		
 	}
 	
-	public boolean checkCollision(Bullet bullet, Enemy enemy) {
-		return bullet.getBounds(Model.getBulletImage()).intersects(enemy.getBounds(Model.getEnemyNormalImage()));
+//	public boolean checkCollision(Bullet bullet, Enemy enemy) {
+//		return bullet.getBounds(Model.getBulletImage()).intersects(enemy.getBounds(Model.getEnemyNormalImage()));
+//	}
+//	public boolean checkCollision(Bullet bullet, Player player) {
+//		return bullet.getBounds(Model.getBulletImage()).intersects(player.getBounds(Model.getEnemyNormalImage()));
+//	}
+
+//    public boolean isCollision(Bullet bullet, Enemy enemy) {
+//    	for (int y = 0; y < bulletImage.getHeight(); y++) {
+//            for (int x = 0; x < bulletImage.getWidth(); x++) {
+//                int bulletPixel = bulletImage.getRGB(x, y);
+//                int enemyPixel = enemyImage.getRGB(enemy.getX() - bullet.getX() + x, enemy.getY() - bullet.getY() + y);
+//                if (isSolid(bulletPixel) && isSolid(enemyPixel)) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
+//    public boolean isCollision(Bullet bullet, Player player) {
+//    	for (int y = 0; y < bulletImage.getHeight(); y++) {
+//    		for (int x = 0; x < bulletImage.getWidth(); x++) {
+//    			int bulletPixel = bulletImage.getRGB(x, y);
+//    			int playerPixel = playerImage.getRGB(player.getX() - bullet.getX() + x, player.getY() - bullet.getY() + y);
+//    			if (isSolid(bulletPixel) && isSolid(playerPixel)) {
+//    				return true;
+//    			}
+//    		}
+//    	}
+//    	return false;
+//    }
+
+	public boolean isPixelPerfectCollision(BufferedImage image1, int x1, int y1, BufferedImage image2, int x2, int y2) {
+	    // 이미지의 너비와 높이
+	    int width1 = image1.getWidth(null);
+	    int height1 = image1.getHeight(null);
+	    int width2 = image2.getWidth(null);
+	    int height2 = image2.getHeight(null);
+
+	    // 이미지의 픽셀 단위로 충돌 검출
+	    for (int i = 0; i < width1; i++) {
+	        for (int j = 0; j < height1; j++) {
+	            // 첫 번째 이미지의 픽셀이 투명한지 확인
+	            int pixel1 = image1.getRGB(i, j);
+	            if ((pixel1 >> 24) == 0x00) {
+	                continue; // 투명한 픽셀은 무시
+	            }
+
+	            // 두 번째 이미지의 해당 위치에 픽셀이 있는지 확인
+	            int i2 = i + x1 - x2;
+	            int j2 = j + y1 - y2;
+	            if (i2 < 0 || i2 >= width2 || j2 < 0 || j2 >= height2) {
+	                continue; // 첫 번째 이미지의 픽셀이 두 번째 이미지의 범위를 벗어나는 경우 무시
+	            }
+
+	            // 두 번째 이미지의 픽셀이 투명한지 확인
+	            int pixel2 = image2.getRGB(i2, j2);
+	            if ((pixel2 >> 24) != 0x00) {
+	                return true; // 두 이미지의 픽셀이 모두 투명하지 않으면 충돌 발생
+	            }
+	        }
+	    }
+	    // 충돌이 없음
+	    return false;
 	}
-	public boolean checkCollision(Bullet bullet, Player player) {
-		return bullet.getBounds(Model.getBulletImage()).intersects(player.getBounds(Model.getEnemyNormalImage()));
+    public boolean isSolid(int argb) {
+        return (argb >> 24) != 0;  // alpha 값이 0이 아니면 solid로 판정
+    }
+    
+	public BufferedImage toBufferedImage(Image img) {
+	    if (img instanceof BufferedImage) {
+	        return (BufferedImage) img;
+	    }
+
+	    // Create a buffered image with transparency
+	    BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+	    // Draw the image on to the buffered image
+	    Graphics2D bGr = bimage.createGraphics();
+	    bGr.drawImage(img, 0, 0, null);
+	    bGr.dispose();
+
+	    // Return the buffered image
+	    return bimage;
 	}
 	
 	public int getScore() {
