@@ -140,7 +140,7 @@ public class GameController {
 			Enemy enemies = it.next();
 			if (enemies.getX() >= 400 || enemies.getX() < 0 || enemies.getY() > 800 || enemies.getY() < 0) 
 				it.remove();
-			enemies.move(pattern);
+//			enemies.move(pattern);
 			Fire(enemies);
 	        Iterator<Bullet> bulletIterator = bullets.iterator();
 	        Iterator<Bullet> enemyBulletIterator = enemyBullets.iterator();
@@ -180,38 +180,6 @@ public class GameController {
 		int hp_boss = 100 * difficulty;
 		
 	}
-	
-//	public boolean checkCollision(Bullet bullet, Enemy enemy) {
-//		return bullet.getBounds(Model.getBulletImage()).intersects(enemy.getBounds(Model.getEnemyNormalImage()));
-//	}
-//	public boolean checkCollision(Bullet bullet, Player player) {
-//		return bullet.getBounds(Model.getBulletImage()).intersects(player.getBounds(Model.getEnemyNormalImage()));
-//	}
-
-//    public boolean isCollision(Bullet bullet, Enemy enemy) {
-//    	for (int y = 0; y < bulletImage.getHeight(); y++) {
-//            for (int x = 0; x < bulletImage.getWidth(); x++) {
-//                int bulletPixel = bulletImage.getRGB(x, y);
-//                int enemyPixel = enemyImage.getRGB(enemy.getX() - bullet.getX() + x, enemy.getY() - bullet.getY() + y);
-//                if (isSolid(bulletPixel) && isSolid(enemyPixel)) {
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
-//    }
-//    public boolean isCollision(Bullet bullet, Player player) {
-//    	for (int y = 0; y < bulletImage.getHeight(); y++) {
-//    		for (int x = 0; x < bulletImage.getWidth(); x++) {
-//    			int bulletPixel = bulletImage.getRGB(x, y);
-//    			int playerPixel = playerImage.getRGB(player.getX() - bullet.getX() + x, player.getY() - bullet.getY() + y);
-//    			if (isSolid(bulletPixel) && isSolid(playerPixel)) {
-//    				return true;
-//    			}
-//    		}
-//    	}
-//    	return false;
-//    }
 
 	public boolean isPixelPerfectCollision(BufferedImage image1, int x1, int y1, BufferedImage image2, int x2, int y2) {
 	    // 이미지의 너비와 높이
