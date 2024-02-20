@@ -9,16 +9,19 @@ public class Enemy {
 	private int enemyX, enemyY, speed = 1;
 	private int hp;
 	private int score = 1;
+	private int pattern;
 	
 	private Player player;
 //	private ArrayList<Bullet> bullets = new ArrayList<>();
 	
-	public Enemy(int hp, int speed) {
+	public Enemy(int hp, int pattern) {
 		enemyX = 200;
 		enemyY = 0;
 		this.hp = hp;
-		this.speed = speed;
+		this.pattern = pattern;
 	}
+	
+	
 	
 	public void drawEnemy(Image image, Graphics2D g2d, ImageObserver IO) {
 		g2d.drawImage(image, enemyX, enemyY, IO);
@@ -55,7 +58,6 @@ public class Enemy {
 	}
 	
 	public void setHP(int damage) {
-		System.out.println("damage");
 		this.hp -= damage;
 	}
 

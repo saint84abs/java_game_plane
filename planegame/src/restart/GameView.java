@@ -14,6 +14,7 @@ public class GameView extends JFrame implements ActionListener {
 	
 	private Player player;
 	private Bullet bullet;
+	private Boss boss;
 	private int scores;
 
 	
@@ -30,10 +31,7 @@ public class GameView extends JFrame implements ActionListener {
             g2d.drawImage(Model.getBackGroundImage(), 0, 0, this);
             player.drawPlane(Model.getPlayerImage(), g2d, this);
             Controller.drawBullet(Model.getBulletImage(), g2d, this);
-            if (scores < 30)
-            	Controller.drawEnemy(Model.getEnemyNormalImage(), g2d, this);
-            else 
-            	Controller.bossEvent();
+        	Controller.drawEnemy(Model.getEnemyNormalImage(), g2d, this);
             g.drawImage(backBuffer, 0, 0, this);
         }
     };	
@@ -89,6 +87,7 @@ public class GameView extends JFrame implements ActionListener {
 		Controller.handleKeyInput(keyStates);
 		Controller.updateBullets();
 		Controller.updateEnemy();
+//		Controller.updateBoss();
 		scores = Controller.getScore();
 		this.repaint();		
 	}

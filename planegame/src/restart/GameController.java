@@ -35,6 +35,12 @@ public class GameController {
     private Random random = new Random();
     private int pattern;
     
+    // 보스 객체 변수
+    private ArrayList<Boss> bosses;
+    private int bossHP;
+    private Boss boss;
+    private int bossPattern;
+    
     // 게임 내부 정보 변수
     private int score = 0;
     private int difficulty = 1;
@@ -49,6 +55,7 @@ public class GameController {
     	bullets = new ArrayList<>();
     	enemyBullets = new ArrayList<>();
     	enemies = new ArrayList<>();
+    	bosses = new ArrayList<>();
     	
     	bulletImage = toBufferedImage(Model.getBulletImage());
     	enemyImage = toBufferedImage(Model.getEnemyNormalImage());
@@ -101,6 +108,18 @@ public class GameController {
 			}
 			enemyBullet.move(-5);
 		}
+        Iterator<Bullet> enemyBulletIterator = enemyBullets.iterator();
+        while (enemyBulletIterator.hasNext()) {
+            Bullet enemyBullet = enemyBulletIterator.next();
+        	if (isPixelPerfectCollision(bulletImage, enemyBullet.getX(), enemyBullet.getY(), playerImage, player.getX(), player.getY())) {
+        		player.setHP(enemyBullet.getDamage() * difficulty);
+        		enemyBulletIterator.remove();
+        		if (player.getHP() <= 0) {
+        			System.out.println("game over!");
+        		}
+        	}
+        	
+        }
 	}
 	
 	public void Fire() {
@@ -121,18 +140,26 @@ public class GameController {
 	}
 	
 	public void addEnemy() {
-		enemies.add(new Enemy(hp * difficulty, speed));
 		pattern = random.nextInt(3) + 1;
+		if (score != 30 * difficulty)
+			enemies.add(new Enemy(hp * difficulty, pattern));
+		else 
+			bosses.add(new Boss(100 * difficulty, pattern));
 	}
 	
 	public void drawEnemy(Image image, Graphics2D g2d, ImageObserver IO) {
-		for (Enemy enemy : enemies) {
-			enemy.drawEnemy(image, g2d, IO);
-		}
+		if (score != 30 * difficulty)
+			for (Enemy enemy : enemies) {
+				enemy.drawEnemy(image, g2d, IO);
+			}
+		else 
+			for (Boss boss : bosses) {
+				boss.drawBoss(image, g2d, IO);
+			}
 	}
 	
 	public void updateEnemy() {		
-		if (enemies.size() <= 3 && score < 30 * difficulty) {
+		if (enemies.size() <= 1) {
 			addEnemy();		
 		}
 		Iterator<Enemy> it = enemies.iterator();
@@ -143,7 +170,6 @@ public class GameController {
 //			enemies.move(pattern);
 			Fire(enemies);
 	        Iterator<Bullet> bulletIterator = bullets.iterator();
-	        Iterator<Bullet> enemyBulletIterator = enemyBullets.iterator();
 	        while (bulletIterator.hasNext()) {
 	            Bullet bullet = bulletIterator.next();
 	            if (isPixelPerfectCollision(bulletImage, bullet.getX(), bullet.getY(), enemyImage, enemies.getX(), enemies.getY())) {
@@ -157,27 +183,27 @@ public class GameController {
 	                break;
 	            }
 	        }
-	        while (enemyBulletIterator.hasNext()) {
-	            Bullet enemyBullet = enemyBulletIterator.next();
-	        	if (isPixelPerfectCollision(bulletImage, enemyBullet.getX(), enemyBullet.getY(), playerImage, player.getX(), player.getY())) {
-	        		player.setHP(enemyBullet.getDamage() * difficulty);
-	        		enemyBulletIterator.remove();
-	        		if (player.getHP() <= 0) {
-	        			System.out.println("game over!");
-	        		}
-	        	}
+	        if (score == 30 * difficulty) {
+	        	enemies.setHP(30);
+	        	addBoss();
 	        	
 	        }
-	        
-	        if (score == 30 * difficulty) 
-	        	break;
 		}
-//		bossEvent();
-//		difficulty += 1;
 	}
 	
-	public void bossEvent() {
-		int hp_boss = 100 * difficulty;
+	public void addBoss() {
+		bosses.add(new Boss(100 * difficulty, random.nextInt(3) + 1));
+	}
+	
+	public void drawBoss(Image image, Graphics2D g2d, ImageObserver IO) {
+		for (Boss boss : bosses)
+			boss.drawBoss(image, g2d, IO);
+	}
+	
+	public void updateBoss() {
+		addBoss();
+		
+		boss.attack(bossPattern);
 		
 	}
 

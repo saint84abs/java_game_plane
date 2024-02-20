@@ -17,8 +17,8 @@ public class Bullet {
 		bulletY = player.getY();
 	}
 	
-	public Bullet(Enemy enemy) {
-		this.enemy = enemy;
+	public Bullet(Enemy e) {
+		this.enemy = e;
 		bulletX = enemy.getX();
 		bulletY = enemy.getY();
 	}
