@@ -169,6 +169,8 @@ public class GameController {
 				it.remove();
 //			enemies.move(pattern);
 			Fire(enemies);
+			
+			// 총알과 적 객체의 충돌 판정
 	        Iterator<Bullet> bulletIterator = bullets.iterator();
 	        while (bulletIterator.hasNext()) {
 	            Bullet bullet = bulletIterator.next();
@@ -183,8 +185,20 @@ public class GameController {
 	                break;
 	            }
 	        }
+	        // 점수가 30점이 되면
+	        // 존재하는 적 객체를 모두 없애고
+	        // 보스를 화면에 출력하고
+	        // 체력과 행동패턴을 설정
+	        
+	        /*
+	         * boss 클래스는 이미 enemy클래스를 상속
+	         * 따라서 오버라이딩을 이용해서 코딩 가능?
+	         * 
+	         */
 	        if (score == 30 * difficulty) {
-	        	enemies.setHP(30);
+	        	
+	        	it.remove();
+	        	
 	        	addBoss();
 	        	
 	        }
